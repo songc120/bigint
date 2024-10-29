@@ -398,5 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Ignore executables in current directory
+
+demo
 */
 *.dSYM/
