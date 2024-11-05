@@ -5,6 +5,7 @@
 class bigint
 {
     std::vector<int8_t> digits;
+    bool is_negative;
     // A default constructor, creating the integer 0.
     // A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
     // A constructor that takes a string of digits and converts it to an arbitrary-precision integer.
@@ -17,7 +18,7 @@ class bigint
     // Insertion (<<, to print the integer to a stream such as std::cout or a file)
 public:
     bigint();
-    bigint(int8_t n);
+    bigint(int64_t n);
     bigint(std::string n);
 
     bigint operator+(bigint const &other) const;
