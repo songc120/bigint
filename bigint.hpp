@@ -24,7 +24,7 @@ public:
     bigint operator+(bigint const &other) const;
     bigint operator+=(bigint const &increment) const;
 
-    bigint operator-(bigint const &other) const;
+    bigint operator-(bigint const &other);
     bigint operator-=(bigint const &decrement) const;
 
     bigint operator*(bigint const &other) const;

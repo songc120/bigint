@@ -42,6 +42,14 @@ bigint::bigint(std::string n)
     }
 }
 
+bigint bigint::operator-() const
+{
+    bigint flip = *this;
+    flip.is_negative = !is_negative;
+
+    return flip;
+}
+
 std::ostream &operator<<(std::ostream &os, const bigint &n)
 {
     if (n.is_negative)
@@ -75,6 +83,18 @@ int main()
     int64_t int64_neg(-1234567890);
     bigint int_big_int_neg(int64_neg);
     std::cout << "The bigint from int is " << int_big_int_neg << ".\n";
+
+    bigint neg = -int_big_int_neg;
+    std::cout
+        << "The -(-1234567890) " << neg << ".\n";
+
+    bigint neg1 = -int_big_int;
+    std::cout
+        << "The -(1234567890) " << neg1 << ".\n";
+
+    bigint neg2 = -default_big_int;
+    std::cout
+        << "The -(default) " << neg2 << ".\n";
 
     return 0;
 }
