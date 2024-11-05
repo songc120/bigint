@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include "bigint.hpp"
-#include <stdint.h>
 
 bigint::bigint()
 {
@@ -27,7 +26,7 @@ std::ostream &operator<<(std::ostream &os, const bigint &n)
 {
     for (int8_t digit : n.digits)
     {
-        os << static_cast<int>(digit);
+        os << static_cast<int16_t>(digit);
     }
     return os;
 }
@@ -37,6 +36,9 @@ int main()
     std::string str = "123456789";
     bigint str_big_int(str);
     std::cout << "The bigint from string is " << str_big_int << ".\n";
+
+    bigint default_big_int();
+    std::cout << "The default bigint is " << default_big_int << ".\n";
 
     return 0;
 }

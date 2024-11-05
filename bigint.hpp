@@ -1,8 +1,7 @@
 #include <vector>
 #include <string>
 #include <inttypes.h>
-#include <stdint.h>
-
+#include <iostream>
 class bigint
 {
     std::vector<int8_t> digits;
