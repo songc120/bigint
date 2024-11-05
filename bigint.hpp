@@ -1,44 +1,45 @@
 #include <vector>
 #include <string>
-using namespace std;
+#include <inttypes.h>
+#include <stdint.h>
 
-class bigint {
-    vector <int> digits;
-// A default constructor, creating the integer 0.
-// A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
-// A constructor that takes a string of digits and converts it to an arbitrary-precision integer.
-// Addition (+ and +=)
-// Subtraction (- and -=)
-// Multiplication (* and *=)
-// Negation (unary -)
-// Comparison (==, !=, <, >, <=, and >=)
-// Assignment (=)
-// Insertion (<<, to print the integer to a stream such as std::cout or a file)
-    public:
-        bigint();
-        bigint(int n);
-        bigint(string n);
+class bigint
+{
+    std::vector<int8_t> digits;
+    // A default constructor, creating the integer 0.
+    // A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
+    // A constructor that takes a string of digits and converts it to an arbitrary-precision integer.
+    // Addition (+ and +=)
+    // Subtraction (- and -=)
+    // Multiplication (* and *=)
+    // Negation (unary -)
+    // Comparison (==, !=, <, >, <=, and >=)
+    // Assignment (=)
+    // Insertion (<<, to print the integer to a stream such as std::cout or a file)
+public:
+    bigint();
+    bigint(int8_t n);
+    bigint(std::string n);
 
-        bigint operator+(bigint const &other) const;
-        bigint operator+=(bigint const &increment) const;
+    bigint operator+(bigint const &other) const;
+    bigint operator+=(bigint const &increment) const;
 
-        bigint operator-(bigint const &other) const;
-        bigint operator-=(bigint const &decrement) const;
+    bigint operator-(bigint const &other) const;
+    bigint operator-=(bigint const &decrement) const;
 
-        bigint operator*(bigint const &other) const;
-        bigint operator*=(bigint const &multiplier) const;
+    bigint operator*(bigint const &other) const;
+    bigint operator*=(bigint const &multiplier) const;
 
-        bigint operator-() const;
+    bigint operator-() const;
 
-        bool operator==(bigint const &other) const;
-        bool operator!=(bigint const &other) const;
-        bool operator<(bigint const &other) const;
-        bool operator>(bigint const &other) const;
-        bool operator<=(bigint const &other) const;
-        bool operator>=(bigint const &other) const;
+    bool operator==(bigint const &other) const;
+    bool operator!=(bigint const &other) const;
+    bool operator<(bigint const &other) const;
+    bool operator>(bigint const &other) const;
+    bool operator<=(bigint const &other) const;
+    bool operator>=(bigint const &other) const;
 
-        bigint operator=(bigint const &other) const;
+    bigint operator=(bigint const &other) const;
 
-        friend ostream& operator<<(ostream &os, const bigint &n);
-
+    friend std::ostream &operator<<(std::ostream &os, const bigint &n);
 };
