@@ -45,4 +45,9 @@ int main()
     std::cout << v1[70] << '\n';
 
     std::cout << 1111123456 + 923456 << '\n';
+
+    uint8_t n1 = 7;
+    uint8_t n2 = 9;
+    std::cout << "n1 = " << static_cast<uint16_t>(n1) << '\n';
+    std::cout << "n1 = " << static_cast<uint16_t>(n1+n2) << '\n';
 }

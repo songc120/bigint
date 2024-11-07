@@ -45,8 +45,7 @@ bigint::bigint(const bigint &other) : digits(other.digits), is_negative(other.is
 
 uint8_t bigint::get_digit(bigint const &big_num, const uint64_t n) const
 {
-    size_t len = big_num.digits.size();
-    return n > len - 1 ? static_cast<uint8_t>(0) : big_num.digits[n];
+    return n < 0 ? static_cast<uint8_t>(0) : big_num.digits[n];
 }
 
 bigint bigint::operator+(bigint const &other) const
@@ -62,12 +61,13 @@ bigint bigint::operator+(bigint const &other) const
     {
         for (uint64_t i = 0; i < len; i++)
         {
-            uint8_t sum_i = get_digit(*this, len - 1 - i) + other.get_digit(other, len - 1 - i) + carry;
+            uint8_t sum_i = get_digit(*this, this_len - 1 - i) + other.get_digit(other, other_len - 1 - i) + carry;
             carry = sum_i / 10;
             sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(sum_i % 10));
         }
-        if (carry)
+        if (carry > 0)
             sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(carry));
+        sum.digits.pop_back();
         sum.is_negative = is_negative;
     }
     else
@@ -173,7 +173,7 @@ std::ostream &operator<<(std::ostream &os, const bigint &n)
     }
     for (uint8_t digit : n.digits)
     {
-        os << static_cast<int16_t>(digit);
+        os << static_cast<uint16_t>(digit);
     }
     return os;
 }
@@ -283,9 +283,18 @@ int main()
         printf("F:nsmallpos > nbigpos\n");
     if (nsmallpos <= nbigpos)
         printf("F:nsmallpos > nbigpos\n");
+
+    std::cout << "-----------.\n";
     std::cout
         << 123 + 12345 << "smallpos +bigpos = " << smallpos + bigpos << ".\n";
+
+    std::cout << "-----------.\n";
     std::cout
-        << 123 - 12345 << "smallpos -bigpos = " << smallpos + (-bigpos) << ".\n";
+        << -123 -12345 << "nsmallpos +nbigpos = " << nsmallpos + nbigpos << ".\n";
+
+    std::cout << "-----------.\n";
+    std::cout << -bigpos << "\n";
+    std::cout
+        << smallpos << " - " << bigpos << "=" << 123 - 12345 << "smallpos -bigpos = " << smallpos + (-bigpos) << ".\n";
     return 0;
 }
