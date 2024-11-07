@@ -37,8 +37,8 @@ public:
 
     bool operator==(bigint const &other) const; //
     bool operator!=(bigint const &other) const; //
-    bool operator<(bigint const &other) const;
-    bool operator>(bigint const &other) const;
+    bool operator<(bigint const &other) const;  //
+    bool operator>(bigint const &other) const;  //
     bool operator<=(bigint const &other) const;
     bool operator>=(bigint const &other) const;
 

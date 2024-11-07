@@ -94,6 +94,14 @@ bool bigint::operator>(bigint const &other) const
 {
     return other < *this;
 }
+bool bigint::operator<=(bigint const &other) const
+{
+    return other == *this || other < *this;
+}
+bool bigint::operator>=(bigint const &other) const
+{
+    return other == *this || other > *this;
+}
 
 bigint &bigint::operator=(const bigint &other)
 {
@@ -203,22 +211,22 @@ int main()
     bigint nbigpos = bigint(-12345);
     bigint nbigbigpos = bigint(-13345);
 
-    if (smallpos > bigpos)
+    if (smallpos <= bigpos)
         printf("smallpos > bigpos\n");
-    if (bigpos > bigbigpos)
+    if (bigpos <= bigbigpos)
         printf("bigpos > bigbigpos\n");
-    if (nbigpos > nsmallpos)
+    if (nbigpos <= nsmallpos)
         printf("nbigpos > nsmallpos\n");
-    if (nbigbigpos > nbigpos)
+    if (nbigbigpos <= nbigpos)
         printf("nbigbigpos > nbigpos\n");
 
-    if (nsmallpos > bigpos)
+    if (nsmallpos <= bigpos)
         printf("nsmallpos > bigpos\n");
-    if (nsmallpos > nsmallpos)
+    if (nsmallpos <= nsmallpos)
         printf("F:nsmallpos > nsmallpos\n");
-    if (nsmallpos > nbigpos)
+    if (nsmallpos <= nbigpos)
         printf("F:nsmallpos > nbigpos\n");
-    if (nsmallpos > nbigpos)
+    if (nsmallpos <= nbigpos)
         printf("F:nsmallpos > nbigpos\n");
     return 0;
 }
