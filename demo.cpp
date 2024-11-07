@@ -51,6 +51,14 @@ bigint bigint::operator-() const
     return flip;
 }
 
+bool bigint::operator==(bigint const &other) const
+{
+    if (is_negative == other.is_negative && digits == other.digits)
+        return true;
+    else
+        return false;
+}
+
 bigint &bigint::operator=(const bigint &other)
 {
     is_negative = other.is_negative;
@@ -104,9 +112,31 @@ int main()
     std::cout
         << "The -(default) " << neg2 << ".\n";
 
+    if (neg2 == int_big_int)
+    {
+        std::cout
+            << "neg2 ==  int_big_int " << neg2 << ";" << int_big_int << ".\n";
+    }
+    else
+    {
+        std::cout
+            << "neg2 !=  int_big_int " << ".\n";
+    }
+
     neg2 = int_big_int;
     std::cout
         << "assign neg2 to  int_big_int " << neg2 << ".\n";
+
+    if (neg2 == int_big_int)
+    {
+        std::cout
+            << "neg2 ==  int_big_int " << ".\n";
+    }
+    else
+    {
+        std::cout
+            << "neg2 !=  int_big_int " << ".\n";
+    }
 
     return 0;
 }
