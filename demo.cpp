@@ -41,7 +41,7 @@ bigint::bigint(std::string n)
         digits.push_back(ch - '0');
     }
 }
-bigint::bigint(const bigint &other) : is_negative(other.is_negative), digits(other.digits) {}
+bigint::bigint(const bigint &other) : digits(other.digits), is_negative(other.is_negative) {}
 
 bigint bigint::operator-() const
 {

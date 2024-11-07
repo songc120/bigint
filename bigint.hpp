@@ -17,6 +17,7 @@ class bigint
     // Assignment (=)
     // Insertion (<<, to print the integer to a stream such as std::cout or a file)
 public:
+    // constructors done
     bigint();
     bigint(int64_t n);
     bigint(std::string n);
@@ -34,14 +35,14 @@ public:
 
     bigint operator-() const;
 
-    bool operator==(bigint const &other) const;
-    bool operator!=(bigint const &other) const;
+    bool operator==(bigint const &other) const; //
+    bool operator!=(bigint const &other) const; //
     bool operator<(bigint const &other) const;
     bool operator>(bigint const &other) const;
     bool operator<=(bigint const &other) const;
     bool operator>=(bigint const &other) const;
 
-    bigint &operator=(const bigint &other);
+    bigint &operator=(const bigint &other); //
 
-    friend std::ostream &operator<<(std::ostream &os, const bigint &n);
+    friend std::ostream &operator<<(std::ostream &os, const bigint &n); //
 };
