@@ -20,6 +20,8 @@ public:
     bigint();
     bigint(int64_t n);
     bigint(std::string n);
+    bigint(const bigint &other);
+    ~bigint() = default;
 
     bigint operator+(bigint const &other) const;
     bigint operator+=(bigint const &increment) const;
@@ -39,7 +41,7 @@ public:
     bool operator<=(bigint const &other) const;
     bool operator>=(bigint const &other) const;
 
-    bigint operator=(bigint const &other) const;
+    bigint &operator=(const bigint &other);
 
     friend std::ostream &operator<<(std::ostream &os, const bigint &n);
 };
