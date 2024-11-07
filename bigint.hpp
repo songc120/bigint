@@ -4,7 +4,7 @@
 #include <iostream>
 class bigint
 {
-    std::vector<int8_t> digits;
+    std::vector<uint8_t> digits;
     bool is_negative;
     // A default constructor, creating the integer 0.
     // A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
@@ -24,6 +24,8 @@ public:
     bigint(const bigint &other);
     ~bigint() = default;
 
+    uint8_t get_digit(bigint const &big_num, const uint64_t n) const;
+
     bigint operator+(bigint const &other) const;
     bigint operator+=(bigint const &increment) const;
 
@@ -39,8 +41,8 @@ public:
     bool operator!=(bigint const &other) const; //
     bool operator<(bigint const &other) const;  //
     bool operator>(bigint const &other) const;  //
-    bool operator<=(bigint const &other) const;
-    bool operator>=(bigint const &other) const;
+    bool operator<=(bigint const &other) const; //
+    bool operator>=(bigint const &other) const; //
 
     bigint &operator=(const bigint &other); //
 

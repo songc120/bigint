@@ -4,7 +4,7 @@
 
 bigint::bigint()
 {
-    digits.push_back(int8_t(0));
+    digits.push_back(uint8_t(0));
     is_negative = false;
 }
 bigint::bigint(int64_t n)
@@ -20,7 +20,7 @@ bigint::bigint(int64_t n)
     }
     while (n)
     {
-        digits.push_back(n % 10);
+        digits.push_back(static_cast<uint8_t>(n % 10));
         n /= 10;
     }
     std::reverse(digits.begin(), digits.end());
@@ -38,10 +38,65 @@ bigint::bigint(std::string n)
     }
     for (char ch : n)
     {
-        digits.push_back(ch - '0');
+        digits.push_back(static_cast<uint8_t>(ch - '0'));
     }
 }
 bigint::bigint(const bigint &other) : digits(other.digits), is_negative(other.is_negative) {}
+
+uint8_t bigint::get_digit(bigint const &big_num, const uint64_t n) const
+{
+    size_t len = big_num.digits.size();
+    return n > len - 1 ? static_cast<uint8_t>(0) : big_num.digits[n];
+}
+
+bigint bigint::operator+(bigint const &other) const
+{
+    bigint sum;
+
+    uint8_t carry = 0;
+
+    size_t this_len = digits.size();
+    size_t other_len = other.digits.size();
+    size_t len = std::max(this_len, other_len);
+    if (is_negative == other.is_negative)
+    {
+        for (uint64_t i = 0; i < len; i++)
+        {
+            uint8_t sum_i = get_digit(*this, len - 1 - i) + other.get_digit(other, len - 1 - i) + carry;
+            carry = sum_i / 10;
+            sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(sum_i % 10));
+        }
+        if (carry)
+            sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(carry));
+        sum.is_negative = is_negative;
+    }
+    else
+    {
+        bigint pos_num = is_negative ? other : *this;
+        bigint neg_num = is_negative ? *this : other;
+        sum.is_negative = pos_num > -neg_num ? 0 : 1;
+
+        uint8_t borrow = 0;
+
+        for (uint64_t i = 0; i < len; i++)
+        {
+            int8_t diff_i = get_digit(pos_num, len - 1 - i) - other.get_digit(neg_num, len - 1 - i) - borrow;
+            if (diff_i < 0)
+            {
+                borrow = 1;
+                diff_i += 10;
+            }
+            else
+            {
+                borrow = 0;
+            }
+            sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(diff_i));
+        }
+        sum.is_negative = is_negative;
+    }
+
+    return sum;
+}
 
 bigint bigint::operator-() const
 {
@@ -116,7 +171,7 @@ std::ostream &operator<<(std::ostream &os, const bigint &n)
     {
         os << '-';
     }
-    for (int8_t digit : n.digits)
+    for (uint8_t digit : n.digits)
     {
         os << static_cast<int16_t>(digit);
     }
@@ -228,5 +283,9 @@ int main()
         printf("F:nsmallpos > nbigpos\n");
     if (nsmallpos <= nbigpos)
         printf("F:nsmallpos > nbigpos\n");
+    std::cout
+        << 123 + 12345 << "smallpos +bigpos = " << smallpos + bigpos << ".\n";
+    std::cout
+        << 123 - 12345 << "smallpos -bigpos = " << smallpos + (-bigpos) << ".\n";
     return 0;
 }
