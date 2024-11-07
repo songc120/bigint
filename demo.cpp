@@ -51,14 +51,14 @@ uint8_t bigint::get_digit(bigint const &big_num, const uint64_t n) const
 bigint bigint::operator+(bigint const &other) const
 {
     bigint sum;
-
-    uint8_t carry = 0;
-
-    size_t this_len = digits.size();
-    size_t other_len = other.digits.size();
-    size_t len = std::max(this_len, other_len);
+    
     if (is_negative == other.is_negative)
     {
+        uint8_t carry = 0;
+        size_t this_len = digits.size();
+        size_t other_len = other.digits.size();
+        size_t len = std::max(this_len, other_len);
+
         for (uint64_t i = 0; i < len; i++)
         {
             uint8_t sum_i = get_digit(*this, this_len - 1 - i) + other.get_digit(other, other_len - 1 - i) + carry;
@@ -67,35 +67,99 @@ bigint bigint::operator+(bigint const &other) const
         }
         if (carry > 0)
             sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(carry));
-        sum.digits.pop_back();
+        
         sum.is_negative = is_negative;
     }
     else
     {
         bigint pos_num = is_negative ? other : *this;
         bigint neg_num = is_negative ? *this : other;
+
+        size_t pos_len = pos_num.digits.size();
+        size_t neg_len = neg_num.digits.size();
+        size_t len = std::max(pos_len, neg_len);
+
         sum.is_negative = pos_num > -neg_num ? 0 : 1;
 
         uint8_t borrow = 0;
 
+
         for (uint64_t i = 0; i < len; i++)
         {
-            int8_t diff_i = get_digit(pos_num, len - 1 - i) - other.get_digit(neg_num, len - 1 - i) - borrow;
-            if (diff_i < 0)
+            uint8_t pos_i = get_digit(pos_num, pos_len - 1 - i);
+            uint8_t neg_i = get_digit(neg_num, neg_len - 1 - i);
+            uint8_t diff_i;
+            
+            if (pos_i < neg_i)
             {
+                diff_i = neg_i - pos_i - borrow;
                 borrow = 1;
-                diff_i += 10;
+                std::cout << "diff_i before adj i ="<< i <<" : " <<static_cast<uint16_t>(diff_i) << ".\n";
+    
+                diff_i = static_cast<uint8_t>(10) - diff_i;
+                std::cout << "diff_i after adj i ="<< i <<" : " <<static_cast<uint16_t>(diff_i) << ".\n";
             }
             else
             {
+                diff_i = pos_i - neg_i - borrow;
                 borrow = 0;
             }
-            sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(diff_i));
+            sum.digits.insert(sum.digits.begin(), diff_i);
         }
-        sum.is_negative = is_negative;
     }
+    sum.digits.pop_back();
 
     return sum;
+}
+
+bigint bigint::operator-(bigint const &other) const{
+    bigint diff;
+    bigint pos_num = is_negative ? other : *this;
+    bigint neg_num = is_negative ? *this : other;
+
+    size_t pos_len = pos_num.digits.size();
+    size_t neg_len = neg_num.digits.size();
+    size_t len = std::max(pos_len, neg_len);
+
+    uint8_t borrow = 0;
+
+    diff.is_negative = pos_num > -neg_num ? 0 : 1;
+
+    if (diff.is_negative){//switch pos neg so that always large - small = pos
+        bigint temp = pos_num;
+        pos_num = neg_num;
+        neg_num= temp;
+    }
+
+
+    for (uint64_t i = 0; i < len; i++)
+    {
+        uint8_t pos_i = get_digit(pos_num, pos_len - 1 - i);
+        uint8_t neg_i = get_digit(neg_num, neg_len - 1 - i);
+        uint8_t diff_i;
+        
+        if (pos_i < neg_i)
+        {
+            diff_i = neg_i - pos_i - borrow;
+            borrow = 1;
+            std::cout << "diff_i before adj i ="<< i <<" : " <<static_cast<uint16_t>(diff_i) << ".\n";
+
+            diff_i = static_cast<uint8_t>(10) - diff_i;
+            std::cout << "diff_i after adj i ="<< i <<" : " <<static_cast<uint16_t>(diff_i) << ".\n";
+        }
+        else
+        {
+            diff_i = pos_i - neg_i - borrow;
+            borrow = 0;
+        }
+        diff.digits.insert(diff.digits.begin(), diff_i);
+    }
+
+    diff.digits.pop_back();
+    if (diff.digits.size() > 1 && diff.digits[0] == 0) diff.digits.erase(diff.digits.begin());
+
+    return diff;
+
 }
 
 bigint bigint::operator-() const
@@ -260,9 +324,10 @@ int main()
     }
 
     bigint smallpos = bigint(123);
+    bigint smallpos2 = bigint(923);
     bigint bigpos = bigint(12345);
     bigint bigbigpos = bigint(13345);
-    bigint nsmallpos = bigint(-123);
+    bigint nsmallpos = bigint(-923);
     bigint nbigpos = bigint(-12345);
     bigint nbigbigpos = bigint(-13345);
 
@@ -284,17 +349,35 @@ int main()
     if (nsmallpos <= nbigpos)
         printf("F:nsmallpos > nbigpos\n");
 
-    std::cout << "-----------.\n";
-    std::cout
-        << 123 + 12345 << "smallpos +bigpos = " << smallpos + bigpos << ".\n";
+    // std::cout << "-----plus------.\n";
+    // std::cout
+    //     << 123 + 12345 << " smallpos +bigpos = " << smallpos + bigpos << ".\n";
 
-    std::cout << "-----------.\n";
-    std::cout
-        << -123 -12345 << "nsmallpos +nbigpos = " << nsmallpos + nbigpos << ".\n";
+    // std::cout << "-----plus------.\n";
+    // std::cout
+    //     << -123 -12345 << " nsmallpos +nbigpos = " << nsmallpos + nbigpos << ".\n";
+    
+    // std::cout << "----plus-------.\n";
+    // std::cout
+    //     << 0 << " default_big_int +default_big_int = " << default_big_int + default_big_int << ".\n";
+    // std::cout << "----plus-------.\n";
+    // std::cout
+    //     << bigpos << " + " << nsmallpos << "=" << 12345 - 923 << " bigpos - smallpos = " << bigpos + nsmallpos<< ".\n";
 
-    std::cout << "-----------.\n";
-    std::cout << -bigpos << "\n";
+    // std::cout << "-----plus------.\n";
+    // std::cout
+    //     << smallpos << " - " << bigpos << "=" << 123 - 12345 << " smallpos -bigpos = " << smallpos + (-bigpos) << ".\n";
+
+    std::cout << "----minus-------.\n";
     std::cout
-        << smallpos << " - " << bigpos << "=" << 123 - 12345 << "smallpos -bigpos = " << smallpos + (-bigpos) << ".\n";
+        << bigpos << " - " << smallpos2 << "=" << 12345 - 923 << " bigpos - smallpos2 = " << bigpos - smallpos2<< ".\n";
+
+    std::cout << "-----minus------.\n";
+    std::cout
+        << bigbigpos << " - " << bigpos << "=" << 13345 - 12345 << " bigbigpos - bigpos = " << bigbigpos - bigpos<< ".\n";
+
+    std::cout << "------minus-----.\n";
+    std::cout
+        << smallpos << " - " << bigpos << "=" << 123 - 12345 << " smallpos -bigpos = " << smallpos -bigpos << ".\n";
     return 0;
 }

@@ -50,4 +50,8 @@ int main()
     uint8_t n2 = 9;
     std::cout << "n1 = " << static_cast<uint16_t>(n1) << '\n';
     std::cout << "n1 = " << static_cast<uint16_t>(n1+n2) << '\n';
+
+    int8_t d = n2-n1;
+    std::cout << "n1 = " << static_cast<uint16_t>(d) << '\n';
+
 }
