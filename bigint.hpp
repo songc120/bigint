@@ -33,7 +33,7 @@ public:
     bigint operator*(bigint const &other) const;
     bigint operator*=(bigint const &multiplier) const;
 
-    bigint operator-() const;
+    bigint operator-() const; //
 
     bool operator==(bigint const &other) const; //
     bool operator!=(bigint const &other) const; //

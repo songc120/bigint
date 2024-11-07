@@ -67,6 +67,34 @@ bool bigint::operator!=(bigint const &other) const
         return false;
 }
 
+bool bigint::operator<(bigint const &other) const
+{
+    if (*this == other)
+        return false;
+    else if (is_negative != other.is_negative)
+        return is_negative;
+    else if (digits.size() == other.digits.size())
+    {
+        for (uint64_t i = 0; i < digits.size(); i++)
+        {
+            if (digits[i] != other.digits[i])
+                return digits[i] > other.digits[i] ? is_negative : !is_negative;
+        }
+        return false;
+    }
+    else if (digits.size() > other.digits.size())
+    {
+        return is_negative;
+    }
+    else
+        return !is_negative;
+}
+
+bool bigint::operator>(bigint const &other) const
+{
+    return other < *this;
+}
+
 bigint &bigint::operator=(const bigint &other)
 {
     is_negative = other.is_negative;
@@ -168,5 +196,29 @@ int main()
             << "neg2 ==  int_big_int " << ".\n";
     }
 
+    bigint smallpos = bigint(123);
+    bigint bigpos = bigint(12345);
+    bigint bigbigpos = bigint(13345);
+    bigint nsmallpos = bigint(-123);
+    bigint nbigpos = bigint(-12345);
+    bigint nbigbigpos = bigint(-13345);
+
+    if (smallpos > bigpos)
+        printf("smallpos > bigpos\n");
+    if (bigpos > bigbigpos)
+        printf("bigpos > bigbigpos\n");
+    if (nbigpos > nsmallpos)
+        printf("nbigpos > nsmallpos\n");
+    if (nbigbigpos > nbigpos)
+        printf("nbigbigpos > nbigpos\n");
+
+    if (nsmallpos > bigpos)
+        printf("nsmallpos > bigpos\n");
+    if (nsmallpos > nsmallpos)
+        printf("F:nsmallpos > nsmallpos\n");
+    if (nsmallpos > nbigpos)
+        printf("F:nsmallpos > nbigpos\n");
+    if (nsmallpos > nbigpos)
+        printf("F:nsmallpos > nbigpos\n");
     return 0;
 }
