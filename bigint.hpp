@@ -29,7 +29,7 @@ public:
     bigint push_back(const uint8_t n);
     bigint pop_back();
     bigint insert(std::vector<uint8_t>::iterator ind,const uint8_t num);
-    bigint erase(const uint64_t ind);
+    bigint erase(const std::vector<uint8_t>::iterator ind);
     size_t size();
     std::vector<uint8_t>::iterator begin();
     std::vector<uint8_t>::iterator end();

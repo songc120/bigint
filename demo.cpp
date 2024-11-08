@@ -72,6 +72,11 @@ bigint bigint::insert(std::vector<uint8_t>::iterator ind,const uint8_t num){
     return *this;
 }
 
+bigint bigint::erase(const std::vector<uint8_t>::iterator ind){
+    digits.erase(ind);
+    return *this;
+}
+
 //overloaded operators
 bigint bigint::operator+(bigint const &other) const
 {
@@ -154,7 +159,7 @@ bigint bigint::operator-(bigint const &other) const{
         uint64_t max_zero_iter = diff.digits.size() - 1;
         for (uint64_t j = 0; j < max_zero_iter; j ++){
             if (diff.digits[0] == 0) {
-                diff.digits.erase(diff.begin());}
+                diff.erase(diff.begin());}
             else break;
         }
 
