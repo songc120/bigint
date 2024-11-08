@@ -148,8 +148,8 @@ bigint bigint::operator-=(bigint const &increment){
 bigint bigint::operator*(bigint const &other) const
 {
     bigint prod;
-    prod.is_negative = !(is_negative == other.is_negative);
 
+    if (abs() == prod || other.abs() == prod) return prod;
     bigint short_num;
     bigint long_num;
 
@@ -177,12 +177,14 @@ bigint bigint::operator*(bigint const &other) const
         for (uint8_t k = 0; k < i; k++) digits_i.digits.push_back(0);
         digits_i.digits.pop_back();
         prod += digits_i;
-        std::cout << "\n digits_i at i = "<< i << " is:"<< digits_i<<"\n";
-        std::cout << "\n prod at i = "<< i << " is:"<< prod<<"\n";
+        // std::cout << "\n digits_i at i = "<< i << " is:"<< digits_i<<"\n";
+        // std::cout << "\n prod at i = "<< i << " is:"<< prod<<"\n";
     }
-        
+
     if (carry > 0)
         prod.digits.insert(prod.digits.begin(), static_cast<uint8_t>(carry));
+    
+    prod.is_negative = !(is_negative == other.is_negative);
     return prod;
 }
 
@@ -451,6 +453,14 @@ int main()
     std::cout << "------times-----.\n";
     std::cout
         << -111 << " * " << 99 << "=" << -111 * 99 << "  = " << bigint(-111) *bigint(99) << ".\n";
+    
+    std::cout << "------times-----.\n";
+    std::cout
+        << 1111 << " * " << 99 << "=" << 1111 * 99 << "  = " << bigint(1111) *bigint(99) << ".\n";
+    
+    std::cout << "------times-----.\n";
+    std::cout
+        << 1111 << " * " << 0 << "=" << 1111 * 0 << "  = " << bigint(1111) *bigint() << ".\n";
     return 0;
     
 }
