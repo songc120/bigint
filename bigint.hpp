@@ -30,7 +30,7 @@ public:
     bigint pop_back();
     bigint insert(std::vector<uint8_t>::iterator ind,const uint8_t num);
     bigint erase(const std::vector<uint8_t>::iterator ind);
-    size_t size();
+    size_t size() const;
     std::vector<uint8_t>::iterator begin();
     std::vector<uint8_t>::iterator end();
 

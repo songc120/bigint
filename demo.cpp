@@ -77,6 +77,10 @@ bigint bigint::erase(const std::vector<uint8_t>::iterator ind){
     return *this;
 }
 
+size_t bigint::size() const{
+    return digits.size();
+}
+
 //overloaded operators
 bigint bigint::operator+(bigint const &other) const
 {
@@ -84,8 +88,8 @@ bigint bigint::operator+(bigint const &other) const
     
     if (is_negative == other.is_negative){
         uint8_t carry = 0;
-        size_t this_len = digits.size();
-        size_t other_len = other.digits.size();
+        size_t this_len = size();
+        size_t other_len = other.size();
         size_t len = std::max(this_len, other_len);
 
         for (uint64_t i = 0; i < len; i++)
@@ -129,8 +133,8 @@ bigint bigint::operator-(bigint const &other) const{
             neg_num = *this;
         }
 
-        size_t pos_len = pos_num.digits.size();
-        size_t neg_len = neg_num.digits.size();
+        size_t pos_len = pos_num.size();
+        size_t neg_len = neg_num.size();
         size_t len = std::max(pos_len, neg_len);
 
         uint8_t borrow = 0;
@@ -156,7 +160,7 @@ bigint bigint::operator-(bigint const &other) const{
         }
 
         diff.pop_back();
-        uint64_t max_zero_iter = diff.digits.size() - 1;
+        uint64_t max_zero_iter = diff.size() - 1;
         for (uint64_t j = 0; j < max_zero_iter; j ++){
             if (diff.digits[0] == 0) {
                 diff.erase(diff.begin());}
@@ -192,8 +196,8 @@ bigint bigint::operator*(bigint const &other) const
     }
 
     uint8_t carry = 0;
-    size_t long_iter = long_num.digits.size();
-    size_t short_iter = short_num.digits.size();
+    size_t long_iter = long_num.size();
+    size_t short_iter = short_num.size();
 
     for (uint64_t i = 0; i < short_iter; i++){
         bigint digits_i;
@@ -255,16 +259,16 @@ bool bigint::operator<(bigint const &other) const
         return false;
     else if (is_negative != other.is_negative)
         return is_negative;
-    else if (digits.size() == other.digits.size())
+    else if (size() == other.size())
     {
-        for (uint64_t i = 0; i < digits.size(); i++)
+        for (uint64_t i = 0; i < size(); i++)
         {
             if (digits[i] != other.digits[i])
                 return digits[i] > other.digits[i] ? is_negative : !is_negative;
         }
         return false;
     }
-    else if (digits.size() > other.digits.size())
+    else if (size() > other.size())
     {
         return is_negative;
     }
