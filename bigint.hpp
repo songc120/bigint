@@ -24,7 +24,7 @@ public:
     bigint(const bigint &other);
     ~bigint() = default;
 
-    uint8_t get_digit(bigint const &big_num, const uint64_t n) const;//
+    uint8_t get_digit(const uint64_t n) const;//
 
     bigint push_back(const uint8_t n);
     bigint pop_back();

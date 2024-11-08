@@ -44,9 +44,9 @@ bigint::bigint(std::string n)
 bigint::bigint(const bigint &other) : digits(other.digits), is_negative(other.is_negative) {}
 //helpers
 
-uint8_t bigint::get_digit(bigint const &big_num, const uint64_t n) const
+uint8_t bigint::get_digit(const uint64_t n) const
 {
-    return n < 0 ? static_cast<uint8_t>(0) : big_num.digits[n];
+    return n < 0 ? static_cast<uint8_t>(0) : digits[n];
 }
 
 bigint bigint::push_back(const uint8_t n){
@@ -94,7 +94,7 @@ bigint bigint::operator+(bigint const &other) const
 
         for (uint64_t i = 0; i < len; i++)
         {
-            uint8_t sum_i = get_digit(*this, this_len - 1 - i) + other.get_digit(other, other_len - 1 - i) + carry;
+            uint8_t sum_i = get_digit(this_len - 1 - i) + other.get_digit(other_len - 1 - i) + carry;
             carry = sum_i / 10;
             sum.insert(sum.begin(), static_cast<uint8_t>(sum_i % 10));
         }
@@ -141,8 +141,8 @@ bigint bigint::operator-(bigint const &other) const{
 
         for (uint64_t i = 0; i < len; i++)
         {
-            uint8_t pos_i = get_digit(pos_num, pos_len - 1 - i);
-            uint8_t neg_i = get_digit(neg_num, neg_len - 1 - i);
+            uint8_t pos_i = pos_num.get_digit(pos_len - 1 - i);
+            uint8_t neg_i = neg_num.get_digit(neg_len - 1 - i);
             uint8_t diff_i;
             
             if (pos_i < (neg_i+borrow))
@@ -162,7 +162,7 @@ bigint bigint::operator-(bigint const &other) const{
         diff.pop_back();
         uint64_t max_zero_iter = diff.size() - 1;
         for (uint64_t j = 0; j < max_zero_iter; j ++){
-            if (diff.digits[0] == 0) {
+            if (diff.get_digit(0) == 0) {
                 diff.erase(diff.begin());}
             else break;
         }
@@ -202,7 +202,7 @@ bigint bigint::operator*(bigint const &other) const
     for (uint64_t i = 0; i < short_iter; i++){
         bigint digits_i;
         for (uint64_t j = 0; j < long_iter; j++){
-            uint8_t prod_i = short_num.get_digit(short_num, short_iter - 1 - i) * long_num.get_digit(long_num, long_iter - 1 - j) + carry;
+            uint8_t prod_i = short_num.get_digit(short_iter - 1 - i) * long_num.get_digit(long_iter - 1 - j) + carry;
             carry = prod_i / 10;
             digits_i.insert(digits_i.begin(), static_cast<uint8_t>(prod_i % 10));
             // std::cout << "\n digit at i = "<< i << " j = "<<j<<" is: " << prod_i % 10 << "\n";
@@ -263,8 +263,8 @@ bool bigint::operator<(bigint const &other) const
     {
         for (uint64_t i = 0; i < size(); i++)
         {
-            if (digits[i] != other.digits[i])
-                return digits[i] > other.digits[i] ? is_negative : !is_negative;
+            if (get_digit(i) != other.get_digit(i))
+                return get_digit(i) > other.get_digit(i) ? is_negative : !is_negative;
         }
         return false;
     }
