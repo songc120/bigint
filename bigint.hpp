@@ -26,6 +26,14 @@ public:
 
     uint8_t get_digit(bigint const &big_num, const uint64_t n) const;//
 
+    bigint push_back(const uint64_t ind);
+    bigint pop_back();
+    bigint insert(const uint64_t ind,const uint64_t num);
+    bigint erase(const uint64_t ind);
+    size_t size();
+    uint8_t begin();
+    uint8_t end();
+
     bigint operator+(bigint const &other) const;//
     bigint operator+=(bigint const &increment);//
 
