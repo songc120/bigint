@@ -52,8 +52,7 @@ bigint bigint::operator+(bigint const &other) const
 {
     bigint sum;
     
-    if (is_negative == other.is_negative)
-    {
+    if (is_negative == other.is_negative){
         uint8_t carry = 0;
         size_t this_len = digits.size();
         size_t other_len = other.digits.size();
@@ -69,45 +68,11 @@ bigint bigint::operator+(bigint const &other) const
             sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(carry));
         
         sum.is_negative = is_negative;
+        sum.digits.pop_back();
     }
-    else
-    {
-        bigint pos_num = is_negative ? other : *this;
-        bigint neg_num = is_negative ? *this : other;
-
-        size_t pos_len = pos_num.digits.size();
-        size_t neg_len = neg_num.digits.size();
-        size_t len = std::max(pos_len, neg_len);
-
-        sum.is_negative = pos_num > -neg_num ? 0 : 1;
-
-        uint8_t borrow = 0;
-
-
-        for (uint64_t i = 0; i < len; i++)
-        {
-            uint8_t pos_i = get_digit(pos_num, pos_len - 1 - i);
-            uint8_t neg_i = get_digit(neg_num, neg_len - 1 - i);
-            uint8_t diff_i;
-            
-            if (pos_i < neg_i)
-            {
-                diff_i = neg_i - pos_i - borrow;
-                borrow = 1;
-                std::cout << "diff_i before adj i ="<< i <<" : " <<static_cast<uint16_t>(diff_i) << ".\n";
-    
-                diff_i = static_cast<uint8_t>(10) - diff_i;
-                std::cout << "diff_i after adj i ="<< i <<" : " <<static_cast<uint16_t>(diff_i) << ".\n";
-            }
-            else
-            {
-                diff_i = pos_i - neg_i - borrow;
-                borrow = 0;
-            }
-            sum.digits.insert(sum.digits.begin(), diff_i);
-        }
-    }
-    sum.digits.pop_back();
+    else if (is_negative){
+        sum = -(-*this - other);
+    } else sum = *this- (-other);
 
     return sum;
 }
@@ -364,63 +329,67 @@ int main()
     // if (nsmallpos <= nbigpos)
     //     printf("F:nsmallpos > nbigpos\n");
 
-    // std::cout << "-----plus------.\n";
-    // std::cout
-    //     << 123 + 12345 << " smallpos +bigpos = " << smallpos + bigpos << ".\n";
+    std::cout << "-----plus------.\n";
+    std::cout
+        << 123 + 12345 << " = " << smallpos + bigpos << ".\n";
 
-    // std::cout << "-----plus------.\n";
-    // std::cout
-    //     << -123 -12345 << " nsmallpos +nbigpos = " << nsmallpos + nbigpos << ".\n";
+    std::cout << "-----plus------.\n";
+    std::cout
+        << -923 -12345 << " = " << nsmallpos + nbigpos << ".\n";
     
-    // std::cout << "----plus-------.\n";
-    // std::cout
-    //     << 0 << " default_big_int +default_big_int = " << default_big_int + default_big_int << ".\n";
-    // std::cout << "----plus-------.\n";
-    // std::cout
-    //     << 12345 << " + " << -923 << "=" << 12345 - 923 << " bigpos - smallpos = " << bigpos + bigint(-923)<< ".\n";
-    // std::cout << "----plus-------.\n";
-    // std::cout
-    //     << 291 << " + " <<- 92 << "=" << 291 - 92 << " bigpos - smallpos = " << bigint(291) + bigint(-92)<< ".\n";
-
-    // std::cout << "-----plus------.\n";
-    // std::cout
-    //     << smallpos << " - " << bigpos << "=" << 123 - 12345 << " smallpos -bigpos = " << smallpos + (-bigpos) << ".\n";
-
-    std::cout << "----minus-------.\n";
+    std::cout << "----plus-------.\n";
     std::cout
-        << bigpos << " - " << smallpos2 << "=" << 12345 - 923 << "  = " << bigpos - smallpos2<< ".\n";
-
-    std::cout << "-----minus------.\n";
+        << 0 << "  = " << default_big_int + default_big_int << ".\n";
+    std::cout << "----plus-------.\n";
     std::cout
-        << bigbigpos << " - " << bigpos << "=" << 13345 - 12345 << "  = " << bigbigpos - bigpos<< ".\n";
-
-    std::cout << "------minus-----.\n";
+        << 12345 << " + " << -923 << "=" << 12345 - 923 << "  = " << bigpos + bigint(-923)<< ".\n";
+    std::cout << "----plus-------.\n";
     std::cout
-        << 291 << " - " << 92 << "=" << 291 - 92 << " = " << bigint(291) -bigint(92) << ".\n";
+        << 291 << " + " <<- 92 << "=" << 291 - 92 << "  = " << bigint(291) + bigint(-92)<< ".\n";
 
-    std::cout << "------minus-----.\n";
+    std::cout << "-----plus------.\n";
     std::cout
-        << 7000 << " - " << 5023 << "=" << 7000 - 5023 << "  = " << bigint(7000) -bigint(5023) << ".\n";
+        << smallpos << " - " << bigpos << "=" << 123 - 12345 << "  = " << smallpos + (-bigpos) << ".\n";
+
+    std::cout << "-----plus------.\n";
+    std::cout
+        << -2000 << " + " << 1 << "=" << -2000 + 1 << "  = " << bigint(-2000) + bigint(1) << ".\n";
+
+    // std::cout << "----minus-------.\n";
+    // std::cout
+    //     << bigpos << " - " << smallpos2 << "=" << 12345 - 923 << "  = " << bigpos - smallpos2<< ".\n";
+
+    // std::cout << "-----minus------.\n";
+    // std::cout
+    //     << bigbigpos << " - " << bigpos << "=" << 13345 - 12345 << "  = " << bigbigpos - bigpos<< ".\n";
+
+    // std::cout << "------minus-----.\n";
+    // std::cout
+    //     << 291 << " - " << 92 << "=" << 291 - 92 << " = " << bigint(291) -bigint(92) << ".\n";
+
+    // std::cout << "------minus-----.\n";
+    // std::cout
+    //     << 7000 << " - " << 5023 << "=" << 7000 - 5023 << "  = " << bigint(7000) -bigint(5023) << ".\n";
     
-    std::cout << "------minus-----.\n";
-    std::cout
-        << 100000 << " - " << 99999 << "=" << 100000 - 99999 << " = " << bigint(100000) -bigint(99999) << ".\n";
-        std::cout << "------minus-----.\n";
-    std::cout
-        << 100000 << " - " << 100000 << "=" << 100000 - 100000 << " = " << bigint(100000) -bigint(100000) << ".\n";
+    // std::cout << "------minus-----.\n";
+    // std::cout
+    //     << 100000 << " - " << 99999 << "=" << 100000 - 99999 << " = " << bigint(100000) -bigint(99999) << ".\n";
+    //     std::cout << "------minus-----.\n";
+    // std::cout
+    //     << 100000 << " - " << 100000 << "=" << 100000 - 100000 << " = " << bigint(100000) -bigint(100000) << ".\n";
     
     
-    std::cout << "------minus-----.\n";
-    std::cout
-        << nsmallpos << " - " << nbigpos << "=" << -923 - -12345 << "  = " << nsmallpos -nbigpos << ".\n";
+    // std::cout << "------minus-----.\n";
+    // std::cout
+    //     << nsmallpos << " - " << nbigpos << "=" << -923 - -12345 << "  = " << nsmallpos -nbigpos << ".\n";
 
-    std::cout << "------minus-----.\n";
-    std::cout
-        << 11 << " - " << -99 << "=" << 11 - -99 << "  = " << bigint(11) -bigint(-99) << ".\n";
+    // std::cout << "------minus-----.\n";
+    // std::cout
+    //     << 11 << " - " << -99 << "=" << 11 - -99 << "  = " << bigint(11) -bigint(-99) << ".\n";
 
-    std::cout << "------minus-----.\n";
-    std::cout
-        << -11 << " - " << 99 << "=" << -11 - 99 << "  = " << bigint(-11) -bigint(99) << ".\n";
+    // std::cout << "------minus-----.\n";
+    // std::cout
+    //     << -11 << " - " << 99 << "=" << -11 - 99 << "  = " << bigint(-11) -bigint(99) << ".\n";
     return 0;
     
 }
