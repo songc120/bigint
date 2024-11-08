@@ -24,13 +24,13 @@ public:
     bigint(const bigint &other);
     ~bigint() = default;
 
-    uint8_t get_digit(bigint const &big_num, const uint64_t n) const;
+    uint8_t get_digit(bigint const &big_num, const uint64_t n) const;//
 
-    bigint operator+(bigint const &other) const;
-    bigint operator+=(bigint const &increment) const;
+    bigint operator+(bigint const &other) const;//
+    bigint operator+=(bigint const &increment);//
 
-    bigint operator-(bigint const &other) const;
-    bigint operator-=(bigint const &decrement) const;
+    bigint operator-(bigint const &other) const;//
+    bigint operator-=(bigint const &decrement);//
 
     bigint operator*(bigint const &other) const;
     bigint operator*=(bigint const &multiplier) const;
