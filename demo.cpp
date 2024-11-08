@@ -81,12 +81,16 @@ size_t bigint::size() const{
     return digits.size();
 }
 
+bool bigint::get_is_negative() const{
+    return is_negative;
+}
+
 //overloaded operators
 bigint bigint::operator+(bigint const &other) const
 {
     bigint sum;
     
-    if (is_negative == other.is_negative){
+    if (get_is_negative() == other.get_is_negative()){
         uint8_t carry = 0;
         size_t this_len = size();
         size_t other_len = other.size();
@@ -101,10 +105,10 @@ bigint bigint::operator+(bigint const &other) const
         if (carry > 0)
             sum.insert(sum.begin(), static_cast<uint8_t>(carry));
         
-        sum.is_negative = is_negative;
+        sum.is_negative = get_is_negative();
         sum.pop_back();
     }
-    else if (is_negative){
+    else if (get_is_negative()){
         sum = -(-*this - other);
     } else sum = *this- (-other);
 
@@ -119,7 +123,7 @@ bigint bigint::operator+=(bigint const &increment){
 bigint bigint::operator-(bigint const &other) const{
     bigint diff;
     
-    if (is_negative == other.is_negative){
+    if (get_is_negative() == other.get_is_negative()){
         diff.is_negative = *this >= other ? 0 : 1;
 
         bigint pos_num;
@@ -167,7 +171,7 @@ bigint bigint::operator-(bigint const &other) const{
             else break;
         }
 
-    } else if (is_negative){
+    } else if (get_is_negative()){
         diff = -(-*this + other);
     } else diff = *this+ (-other);
     return diff;
@@ -218,14 +222,14 @@ bigint bigint::operator*(bigint const &other) const
     if (carry > 0)
         prod.insert(prod.begin(), static_cast<uint8_t>(carry));
     
-    prod.is_negative = !(is_negative == other.is_negative);
+    prod.is_negative = !(get_is_negative() == other.get_is_negative());
     return prod;
 }
 
 bigint bigint::operator-() const
 {
     bigint flip = *this;
-    flip.is_negative = !is_negative;
+    flip.is_negative = !get_is_negative();
 
     return flip;
 }
@@ -239,7 +243,7 @@ bigint bigint::abs() const{
 
 bool bigint::operator==(bigint const &other) const
 {
-    if (is_negative == other.is_negative && digits == other.digits)
+    if (get_is_negative() == other.get_is_negative() && digits == other.digits)
         return true;
     else
         return false;
@@ -247,7 +251,7 @@ bool bigint::operator==(bigint const &other) const
 
 bool bigint::operator!=(bigint const &other) const
 {
-    if (is_negative != other.is_negative || digits != other.digits)
+    if (get_is_negative() != other.get_is_negative() || digits != other.digits)
         return true;
     else
         return false;
@@ -257,23 +261,23 @@ bool bigint::operator<(bigint const &other) const
 {
     if (*this == other)
         return false;
-    else if (is_negative != other.is_negative)
-        return is_negative;
+    else if (get_is_negative() != other.get_is_negative())
+        return get_is_negative();
     else if (size() == other.size())
     {
         for (uint64_t i = 0; i < size(); i++)
         {
             if (get_digit(i) != other.get_digit(i))
-                return get_digit(i) > other.get_digit(i) ? is_negative : !is_negative;
+                return get_digit(i) > other.get_digit(i) ? get_is_negative() : !get_is_negative();
         }
         return false;
     }
     else if (size() > other.size())
     {
-        return is_negative;
+        return get_is_negative();
     }
     else
-        return !is_negative;
+        return !get_is_negative();
 }
 
 bool bigint::operator>(bigint const &other) const
@@ -291,14 +295,14 @@ bool bigint::operator>=(bigint const &other) const
 
 bigint &bigint::operator=(const bigint &other)
 {
-    is_negative = other.is_negative;
+    is_negative = other.get_is_negative();
     digits = other.digits;
     return *this;
 }
 
 std::ostream &operator<<(std::ostream &os, const bigint &n)
 {
-    if (n.is_negative)
+    if (n.get_is_negative())
     {
         os << '-';
     }

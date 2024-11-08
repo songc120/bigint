@@ -34,6 +34,9 @@ public:
     std::vector<uint8_t>::iterator begin();
     std::vector<uint8_t>::iterator end();
 
+    bool get_is_negative() const;
+    bigint set_negative(bool neg);
+
     bigint operator+(bigint const &other) const;//
     bigint operator+=(bigint const &increment);//
 
