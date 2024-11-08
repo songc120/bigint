@@ -183,8 +183,8 @@ bigint bigint::operator-(bigint const &other) const{
 
 }
 
-bigint bigint::operator-=(bigint const &increment){
-    *this = *this - increment;
+bigint bigint::operator-=(bigint const &decrement){
+    *this = *this - decrement;
     return *this;
 }
 
@@ -229,6 +229,11 @@ bigint bigint::operator*(bigint const &other) const
     
     prod.set_negative(!(get_is_negative() == other.get_is_negative()));
     return prod;
+}
+
+bigint bigint::operator*=(bigint const &multiplier){
+    *this = *this * multiplier;
+    return *this;
 }
 
 bigint bigint::operator-() const
@@ -500,10 +505,16 @@ int main()
     std::cout << "------times-----.\n";
     std::cout
         << 1111 << " * " << 99 << "=" << 1111 * 99 << "  = " << bigint(1111) *bigint(99) << ".\n";
-    
+    bigint m1=bigint(1111);
+    m1*= bigint(99);
+    std::cout
+        << m1<< ".\n";
     std::cout << "------times-----.\n";
     std::cout
         << 1111 << " * " << 0 << "=" << 1111 * 0 << "  = " << bigint(1111) *bigint() << ".\n";
+    m1*= bigint();
+    std::cout
+        << m1<< ".\n";
     return 0;
     
 }
