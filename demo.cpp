@@ -156,9 +156,9 @@ bigint bigint::operator-(bigint const &other) const{
     }
 
     diff.digits.pop_back();
-    uint64_t max_zero_iter = diff.digits.size();
+    uint64_t max_zero_iter = diff.digits.size() - 1;
     for (uint64_t j = 0; j < max_zero_iter; j ++){
-        if (diff.digits[0] < static_cast<uint8_t>(1)) {
+        if (diff.digits[0] == 0) {
             diff.digits.erase(diff.digits.begin());}
         else break;
     }
@@ -395,6 +395,9 @@ int main()
     std::cout << "------minus-----.\n";
     std::cout
         << 100000 << " - " << 99999 << "=" << 100000 - 99999 << " smallpos -bigpos = " << bigint(100000) -bigint(99999) << ".\n";
+        std::cout << "------minus-----.\n";
+    std::cout
+        << 100000 << " - " << 100000 << "=" << 100000 - 100000 << " smallpos -bigpos = " << bigint(100000) -bigint(100000) << ".\n";
     // std::cout << "------minus-----.\n";
     // std::cout
     //     << smallpos << " - " << bigpos << "=" << 123 - 12345 << " smallpos -bigpos = " << smallpos -bigpos << ".\n";
