@@ -28,11 +28,11 @@ public:
 
     bigint push_back(const uint8_t n);
     bigint pop_back();
-    bigint insert(const uint64_t ind,const uint8_t num);
+    bigint insert(std::vector<uint8_t>::iterator ind,const uint8_t num);
     bigint erase(const uint64_t ind);
     size_t size();
-    uint8_t begin();
-    uint8_t end();
+    std::vector<uint8_t>::iterator begin();
+    std::vector<uint8_t>::iterator end();
 
     bigint operator+(bigint const &other) const;//
     bigint operator+=(bigint const &increment);//

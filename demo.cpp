@@ -23,7 +23,7 @@ bigint::bigint(int64_t n)
         push_back(static_cast<uint8_t>(n % 10));
         n /= 10;
     }
-    std::reverse(digits.begin(), digits.end());
+    std::reverse(begin(), end());
 }
 bigint::bigint(std::string n)
 {
@@ -59,6 +59,19 @@ bigint bigint::pop_back(){
     return *this;
 }
 
+std::vector<uint8_t>::iterator bigint::begin(){
+    return digits.begin();
+}
+
+std::vector<uint8_t>::iterator bigint::end(){
+    return digits.end();
+}
+
+bigint bigint::insert(std::vector<uint8_t>::iterator ind,const uint8_t num){
+    digits.insert(ind, num);
+    return *this;
+}
+
 //overloaded operators
 bigint bigint::operator+(bigint const &other) const
 {
@@ -74,10 +87,10 @@ bigint bigint::operator+(bigint const &other) const
         {
             uint8_t sum_i = get_digit(*this, this_len - 1 - i) + other.get_digit(other, other_len - 1 - i) + carry;
             carry = sum_i / 10;
-            sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(sum_i % 10));
+            sum.insert(sum.begin(), static_cast<uint8_t>(sum_i % 10));
         }
         if (carry > 0)
-            sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(carry));
+            sum.insert(sum.begin(), static_cast<uint8_t>(carry));
         
         sum.is_negative = is_negative;
         sum.pop_back();
@@ -134,14 +147,14 @@ bigint bigint::operator-(bigint const &other) const{
                 diff_i = pos_i - neg_i - borrow;
                 borrow = 0;
             }
-            diff.digits.insert(diff.digits.begin(), diff_i);
+            diff.insert(diff.begin(), diff_i);
         }
 
         diff.pop_back();
         uint64_t max_zero_iter = diff.digits.size() - 1;
         for (uint64_t j = 0; j < max_zero_iter; j ++){
             if (diff.digits[0] == 0) {
-                diff.digits.erase(diff.digits.begin());}
+                diff.digits.erase(diff.begin());}
             else break;
         }
 
@@ -182,7 +195,7 @@ bigint bigint::operator*(bigint const &other) const
         for (uint64_t j = 0; j < long_iter; j++){
             uint8_t prod_i = short_num.get_digit(short_num, short_iter - 1 - i) * long_num.get_digit(long_num, long_iter - 1 - j) + carry;
             carry = prod_i / 10;
-            digits_i.digits.insert(digits_i.digits.begin(), static_cast<uint8_t>(prod_i % 10));
+            digits_i.insert(digits_i.begin(), static_cast<uint8_t>(prod_i % 10));
             // std::cout << "\n digit at i = "<< i << " j = "<<j<<" is: " << prod_i % 10 << "\n";
             // std::cout << "\n carry at i = "<< i << " j = "<<j<<" is: " << static_cast<uint16_t>(carry) << "\n";
         }
@@ -194,7 +207,7 @@ bigint bigint::operator*(bigint const &other) const
     }
 
     if (carry > 0)
-        prod.digits.insert(prod.digits.begin(), static_cast<uint8_t>(carry));
+        prod.insert(prod.begin(), static_cast<uint8_t>(carry));
     
     prod.is_negative = !(is_negative == other.is_negative);
     return prod;
