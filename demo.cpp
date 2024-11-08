@@ -54,6 +54,11 @@ bigint bigint::push_back(const uint8_t n){
     return *this;
 }
 
+bigint bigint::pop_back(){
+    digits.pop_back();
+    return *this;
+}
+
 //overloaded operators
 bigint bigint::operator+(bigint const &other) const
 {
@@ -75,7 +80,7 @@ bigint bigint::operator+(bigint const &other) const
             sum.digits.insert(sum.digits.begin(), static_cast<uint8_t>(carry));
         
         sum.is_negative = is_negative;
-        sum.digits.pop_back();
+        sum.pop_back();
     }
     else if (is_negative){
         sum = -(-*this - other);
@@ -132,7 +137,7 @@ bigint bigint::operator-(bigint const &other) const{
             diff.digits.insert(diff.digits.begin(), diff_i);
         }
 
-        diff.digits.pop_back();
+        diff.pop_back();
         uint64_t max_zero_iter = diff.digits.size() - 1;
         for (uint64_t j = 0; j < max_zero_iter; j ++){
             if (diff.digits[0] == 0) {
@@ -182,7 +187,7 @@ bigint bigint::operator*(bigint const &other) const
             // std::cout << "\n carry at i = "<< i << " j = "<<j<<" is: " << static_cast<uint16_t>(carry) << "\n";
         }
         for (uint8_t k = 0; k < i; k++) digits_i.push_back(0);
-        digits_i.digits.pop_back();
+        digits_i.pop_back();
         prod += digits_i;
         // std::cout << "\n digits_i at i = "<< i << " is:"<< digits_i<<"\n";
         // std::cout << "\n prod at i = "<< i << " is:"<< prod<<"\n";
