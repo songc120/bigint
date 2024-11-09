@@ -27,26 +27,26 @@ public:
     uint8_t get_digit(const uint64_t n) const;//
     std::vector<uint8_t> get_digits() const;//
 
-    void set_digits(std::vector<uint8_t> n);
-    bigint push_back(const uint8_t n);//
-    bigint pop_back();//
-    bigint insert(std::vector<uint8_t>::iterator ind,const uint8_t num);//
-    bigint erase(const std::vector<uint8_t>::iterator ind);//
+    bigint& set_digits(std::vector<uint8_t> n);
+    bigint& push_back(const uint8_t n);//
+    bigint& pop_back();//
+    bigint& insert(std::vector<uint8_t>::iterator ind,const uint8_t num);//
+    bigint& erase(const std::vector<uint8_t>::iterator ind);//
     size_t size() const;//
     std::vector<uint8_t>::iterator begin();//
     std::vector<uint8_t>::iterator end();//
 
     bool get_is_negative() const;//
-    bigint set_negative(bool neg);//
+    bigint& set_negative(bool neg);//
 
     bigint operator+(bigint const &other) const;//
-    bigint operator+=(bigint const &increment);//
+    bigint& operator+=(bigint const &increment);//
 
     bigint operator-(bigint const &other) const;//
-    bigint operator-=(bigint const &decrement);//
+    bigint& operator-=(bigint const &decrement);//
 
     bigint operator*(bigint const &other) const;//
-    bigint operator*=(bigint const &multiplier);//
+    bigint& operator*=(bigint const &multiplier);//
 
     bigint operator-() const; //
     bigint abs() const; //
@@ -58,7 +58,7 @@ public:
     bool operator<=(bigint const &other) const; //
     bool operator>=(bigint const &other) const; //
 
-    bigint &operator=(const bigint &other); //
+    bigint& operator=(const bigint &other); //
 
-    friend std::ostream &operator<<(std::ostream &os, const bigint &n); //
+    friend std::ostream& operator<<(std::ostream &os, const bigint &n); //
 };

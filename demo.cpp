@@ -53,16 +53,17 @@ std::vector<uint8_t> bigint::get_digits() const {
     return digits;
 }
 
-void bigint::set_digits(std::vector<uint8_t> n){
+bigint& bigint::set_digits(std::vector<uint8_t> n){
     digits = n;
+    return *this;
 }
 
-bigint bigint::push_back(const uint8_t n){
+bigint& bigint::push_back(const uint8_t n){
     digits.push_back(n);
     return *this;
 }
 
-bigint bigint::pop_back(){
+bigint& bigint::pop_back(){
     digits.pop_back();
     return *this;
 }
@@ -75,12 +76,12 @@ std::vector<uint8_t>::iterator bigint::end(){
     return digits.end();
 }
 
-bigint bigint::insert(std::vector<uint8_t>::iterator ind,const uint8_t num){
+bigint& bigint::insert(std::vector<uint8_t>::iterator ind,const uint8_t num){
     digits.insert(ind, num);
     return *this;
 }
 
-bigint bigint::erase(const std::vector<uint8_t>::iterator ind){
+bigint& bigint::erase(const std::vector<uint8_t>::iterator ind){
     digits.erase(ind);
     return *this;
 }
@@ -93,7 +94,7 @@ bool bigint::get_is_negative() const{
     return is_negative;
 }
 
-bigint bigint::set_negative(bool neg){
+bigint& bigint::set_negative(bool neg){
     is_negative = neg;
     return *this;
 }
@@ -128,7 +129,7 @@ bigint bigint::operator+(bigint const &other) const
     return sum;
 }
 
-bigint bigint::operator+=(bigint const &increment){
+bigint& bigint::operator+=(bigint const &increment){
     *this = *this + increment;
     return *this;
 }
@@ -191,7 +192,7 @@ bigint bigint::operator-(bigint const &other) const{
 
 }
 
-bigint bigint::operator-=(bigint const &decrement){
+bigint& bigint::operator-=(bigint const &decrement){
     *this = *this - decrement;
     return *this;
 }
@@ -242,7 +243,7 @@ bigint bigint::operator*(bigint const &other) const
     return prod;
 }
 
-bigint bigint::operator*=(bigint const &multiplier){
+bigint& bigint::operator*=(bigint const &multiplier){
     *this = *this * multiplier;
     return *this;
 }
@@ -314,14 +315,14 @@ bool bigint::operator>=(bigint const &other) const
     return other == *this || *this > other;
 }
 
-bigint &bigint::operator=(const bigint &other)
+bigint& bigint::operator=(const bigint &other)
 {
     set_negative(other.get_is_negative());
     set_digits(other.get_digits());
     return *this;
 }
 
-std::ostream &operator<<(std::ostream &os, const bigint &n)
+std::ostream& operator<<(std::ostream &os, const bigint &n)
 {
     if (n.get_is_negative())
     {
