@@ -41,12 +41,16 @@ bigint::bigint(std::string n)
         push_back(static_cast<uint8_t>(ch - '0'));
     }
 }
-bigint::bigint(const bigint &other) : digits(other.digits), is_negative(other.is_negative) {}
+bigint::bigint(const bigint &other) : digits(other.get_digits()), is_negative(other.get_is_negative()) {}
 //helpers
 
 uint8_t bigint::get_digit(const uint64_t n) const
 {
-    return n < 0 ? static_cast<uint8_t>(0) : digits[n];
+    return n < 0 ? static_cast<uint8_t>(0) : get_digits()[n];
+}
+
+std::vector<uint8_t> bigint::get_digits() const {
+    return digits;
 }
 
 bigint bigint::push_back(const uint8_t n){
@@ -253,7 +257,7 @@ bigint bigint::abs() const{
 
 bool bigint::operator==(bigint const &other) const
 {
-    if (get_is_negative() == other.get_is_negative() && digits == other.digits)
+    if (get_is_negative() == other.get_is_negative() && get_digits() == other.get_digits())
         return true;
     else
         return false;
@@ -261,7 +265,7 @@ bool bigint::operator==(bigint const &other) const
 
 bool bigint::operator!=(bigint const &other) const
 {
-    if (get_is_negative() != other.get_is_negative() || digits != other.digits)
+    if (get_is_negative() != other.get_is_negative() || get_digits() != other.get_digits())
         return true;
     else
         return false;
@@ -306,7 +310,7 @@ bool bigint::operator>=(bigint const &other) const
 bigint &bigint::operator=(const bigint &other)
 {
     set_negative(other.get_is_negative());
-    digits = other.digits;
+    digits = other.get_digits();
     return *this;
 }
 
@@ -316,7 +320,7 @@ std::ostream &operator<<(std::ostream &os, const bigint &n)
     {
         os << '-';
     }
-    for (uint8_t digit : n.digits)
+    for (uint8_t digit : n.get_digits())
     {
         os << static_cast<uint16_t>(digit);
     }
@@ -501,6 +505,11 @@ int main()
     std::cout << "------times-----.\n";
     std::cout
         << -111 << " * " << 99 << "=" << -111 * 99 << "  = " << bigint(-111) *bigint(99) << ".\n";
+
+    std::cout << "------times-----.\n";
+    std::cout
+        << -222 << " * " << 99 << "=" << -222 * 99 << "  = " << bigint(-222) *bigint(99) << ".\n";
+    
     
     std::cout << "------times-----.\n";
     std::cout

@@ -25,6 +25,7 @@ public:
     ~bigint() = default;
 
     uint8_t get_digit(const uint64_t n) const;//
+    std::vector<uint8_t> get_digits() const;
 
     bigint push_back(const uint8_t n);//
     bigint pop_back();//
