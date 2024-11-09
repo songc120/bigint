@@ -53,6 +53,10 @@ std::vector<uint8_t> bigint::get_digits() const {
     return digits;
 }
 
+void bigint::set_digits(std::vector<uint8_t> n){
+    digits = n;
+}
+
 bigint bigint::push_back(const uint8_t n){
     digits.push_back(n);
     return *this;
@@ -313,7 +317,7 @@ bool bigint::operator>=(bigint const &other) const
 bigint &bigint::operator=(const bigint &other)
 {
     set_negative(other.get_is_negative());
-    digits = other.get_digits();
+    set_digits(other.get_digits());
     return *this;
 }
 
@@ -513,6 +517,9 @@ int main()
     std::cout
         << -222 << " * " << 99 << "=" << -222 * 99 << "  = " << bigint(-222) *bigint(99) << ".\n";
     
+    std::cout << "------times-----.\n";
+    std::cout
+        << 1111 << " * " << 9999 << "=" << 1111 * 9999 << "  = " << bigint(1111) *bigint(9999) << ".\n";
     
     std::cout << "------times-----.\n";
     std::cout
