@@ -222,14 +222,17 @@ bigint bigint::operator*(bigint const &other) const
             // std::cout << "\n carry at i = "<< i << " j = "<<j<<" is: " << static_cast<uint16_t>(carry) << "\n";
         }
         for (uint8_t k = 0; k < i; k++) digits_i.push_back(0);
+
+        if (carry > 0){
+            digits_i.insert(digits_i.begin(), static_cast<uint8_t>(carry));
+            carry = 0;
+        }
+
         digits_i.pop_back();
         prod += digits_i;
         // std::cout << "\n digits_i at i = "<< i << " is:"<< digits_i<<"\n";
         // std::cout << "\n prod at i = "<< i << " is:"<< prod<<"\n";
     }
-
-    if (carry > 0)
-        prod.insert(prod.begin(), static_cast<uint8_t>(carry));
     
     prod.set_negative(!(get_is_negative() == other.get_is_negative()));
     return prod;
@@ -518,12 +521,18 @@ int main()
     m1*= bigint(99);
     std::cout
         << m1<< ".\n";
+
+    std::cout << "------times-----.\n";
+    std::cout
+        << 99 << " * " << 23456 << "=" << 99 * 23456 << "  = " << bigint(99) *bigint(23456) << ".\n";
+
     std::cout << "------times-----.\n";
     std::cout
         << 1111 << " * " << 0 << "=" << 1111 * 0 << "  = " << bigint(1111) *bigint() << ".\n";
     m1*= bigint();
     std::cout
         << m1<< ".\n";
+        
     return 0;
     
 }
