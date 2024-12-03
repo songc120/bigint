@@ -108,6 +108,11 @@ bigint::bigint(std::string n)
         is_negative = true;
         n = n.substr(1);
     }
+    else if (n[0] == '+')
+    {
+        is_negative = false;
+        n = n.substr(1);
+    }
     else
     {
         is_negative = false;
