@@ -24,7 +24,7 @@ int8_t unit_test_2()
         std::istringstream string_stream(line);
         std::string left, op, right, eq, result;
         string_stream >> left >> op >> right >> eq >> result;
-        std::cout << "Tesing operation" << op << ": " << left << op << right << "=" << result << '\n';
+        std::cout << "Testing operation" << op << ": " << left << op << right << "=" << result << '\n';
 
         if (op == "+" || op == "-" || op == "*")
         {
@@ -119,7 +119,7 @@ int8_t unit_test_1()
         {
             std::string op = left;
             bigint old_value = bigint(right);
-            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation pre" << op << ": " << left << op << "=" << result << '\n';
             ++old_value;
             assert(old_value == expected_result && "Pre-increment test failed!");
         }
@@ -127,12 +127,17 @@ int8_t unit_test_1()
         {
             std::string op = left;
             bigint old_value = bigint(right);
-            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation pre" << op << ": " << left << op << "=" << result << '\n';
             --old_value;
             assert(old_value == expected_result && "Pre-decrement test failed!");
         }
-
-        // }
+        else if (left == "-")
+        {
+            std::string op = left;
+            bigint old_value = bigint(right);
+            std::cout << "Testing operation " << op << ": " << left << op << "=" << result << '\n';
+            assert(-old_value == expected_result && "Unary negation test failed!");
+        }
     }
 
     input.close();
