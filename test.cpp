@@ -8,10 +8,27 @@ int main(int argc, char *argv[])
         if (argc < 2)
         {
             std::cout << "Usage examples:\n";
-            std::cout << " ./demo 123\n";
-            std::cout << " ./demo \"123 + 123\"\n";
-            std::cout << " ./demo 123 + 123\n";
+            std::cout << " ./test 123\n";
             return 1;
+        }
+        else
+        {
+            bigint given = bigint(argv[1]);
+
+            std::cout
+                << "Bigint from input:" << given << "\n";
+            std::cout << "++bigint:" << ++given << "\n";
+            std::cout
+                << "Bigint from input now:" << given << "\n";
+            std::cout << "bigint++:" << given++ << "\n";
+            std::cout
+                << "Bigint from input now:" << given << "\n";
+            std::cout << "--bigint:" << --given << "\n";
+            std::cout
+                << "Bigint from input now:" << given << "\n";
+            std::cout << "bigint--:" << given-- << "\n";
+            std::cout
+                << "Bigint from input now:" << given << "\n";
         }
     }
     catch (const std::invalid_argument &e)

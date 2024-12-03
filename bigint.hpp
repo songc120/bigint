@@ -53,9 +53,13 @@ public:
 
     bigint operator+(bigint const &other) const;
     bigint &operator+=(bigint const &increment);
+    bigint &operator++();
+    bigint operator++(int);
 
     bigint operator-(bigint const &other) const;
     bigint &operator-=(bigint const &decrement);
+    bigint &operator--();
+    bigint operator--(int);
 
     bigint operator*(bigint const &other) const;
     bigint &operator*=(bigint const &multiplier);
@@ -71,11 +75,6 @@ public:
     bool operator>=(bigint const &other) const;
 
     bigint &operator=(const bigint &other);
-
-    bigint &operator++();
-    bigint &operator++(int);
-    bigint &operator--();
-    bigint &operator--(int);
 
     friend std::ostream &operator<<(std::ostream &os, const bigint &n);
 };
@@ -237,6 +236,18 @@ bigint &bigint::operator+=(bigint const &increment)
     return *this;
 }
 
+bigint &bigint::operator++()
+{
+    return *this += bigint(1);
+}
+
+bigint bigint::operator++(int)
+{
+    bigint temp = *this;
+    ++(*this);
+    return temp;
+}
+
 bigint bigint::operator-(bigint const &other) const
 {
     bigint diff;
@@ -310,6 +321,18 @@ bigint &bigint::operator-=(bigint const &decrement)
 {
     *this = *this - decrement;
     return *this;
+}
+
+bigint &bigint::operator--()
+{
+    return *this -= bigint(1);
+}
+
+bigint bigint::operator--(int)
+{
+    bigint temp = *this;
+    --(*this);
+    return temp;
 }
 
 bigint bigint::operator*(bigint const &other) const

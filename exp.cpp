@@ -14,6 +14,11 @@ int8_t get_digit(std::vector<int> v, const int8_t n)
 
 int main()
 {
+    int i1 = 2;
+    std::cout << i1++ << '\n';
+    std::cout << i1 << '\n';
+    std::cout << ++i1 << '\n';
+    std::cout << i1 << '\n';
     std::vector<int> v1 = {1, 1, 1, 1, 1, 2, 3, 4, 5, 6};
     std::vector<int> v2 = {9, 2, 3, 4, 5, 6};
     std::vector<int> v3;
