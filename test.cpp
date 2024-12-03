@@ -3,64 +3,35 @@
 #include <sstream>
 #include <cassert>
 
-int main(int argc, char *argv[])
+int8_t unit_test_2()
 {
-    try
+    std::string filename = "./data/unit_test_2data.txt";
+    std::ifstream input(filename);
+
+    if (!input.is_open())
+    {
+        std::cout << "Error opening input file!";
+        return -1;
+    }
+
+    std::string line;
+    u_int64_t total_tests = 0;
+
+    while (std::getline(input, line))
     {
 
-        // if (argc < 2)
-        // {
-        //     std::cout << "Usage examples:\n";
-        //     std::cout << " ./test 123\n";
-        //     return 1;
-        // }
-        // else
-        // {
-        //     bigint given = bigint(argv[1]);
+        ++total_tests;
+        std::istringstream string_stream(line);
+        std::string left, op, right, arrow, result;
+        string_stream >> left >> op >> right >> arrow >> result;
+        std::cout << "Tesing operation" << op << ": " << left << op << right << "=" << result << '\n';
 
-        //     std::cout
-        //         << "Bigint from input:" << given << "\n";
-        //     std::cout << "++bigint:" << ++given << "\n";
-        //     std::cout
-        //         << "Bigint from input now:" << given << "\n";
-        //     std::cout << "bigint++:" << given++ << "\n";
-        //     std::cout
-        //         << "Bigint from input now:" << given << "\n";
-        //     std::cout << "--bigint:" << --given << "\n";
-        //     std::cout
-        //         << "Bigint from input now:" << given << "\n";
-        //     std::cout << "bigint--:" << given-- << "\n";
-        //     std::cout
-        //         << "Bigint from input now:" << given << "\n";
-        //     std::cout
-        //         << "0-1:" << bigint(0) - bigint(1) << "\n";
-        // }
-        std::string filename = "./data/results2params.txt";
-        std::ifstream input(filename);
-
-        if (!input.is_open())
+        if (op == "+" || op == "-" || op == "*")
         {
-            std::cout << "Error opening input file!";
-            return -1;
-        }
+            bigint bigint1(left);
+            bigint bigint2(right);
+            bigint expected_result(result);
 
-        std::string line;
-        u_int64_t total_tests = 0;
-        u_int64_t passed_tests = 0;
-
-        while (std::getline(input, line))
-        {
-
-            ++total_tests;
-            std::istringstream string_stream(line);
-            std::string int1, int2, op, res;
-
-            string_stream >> int1 >> int2 >> op >> res;
-            bigint bigint1(int1);
-            bigint bigint2(int2);
-            bigint expected_result(res);
-
-            std::cout << "Tesing operation" << op << ": " << int1 << op << int2 << "=" << res << '\n';
             if (op == "+")
             {
                 assert(bigint1 + bigint2 == expected_result && "Addition test failed!");
@@ -73,11 +44,42 @@ int main(int argc, char *argv[])
             {
                 assert(bigint1 * bigint2 == expected_result && "Multiplication test failed!");
             }
-            ++passed_tests;
         }
+        else if (op == "+=" || op == "-=" || op == "*=")
+        {
+            bigint bigint1(left);
+            bigint bigint2(right);
+            bigint expected_result(result);
 
-        input.close();
-        std::cout << "Tests passed: " << passed_tests << "/" << total_tests << std::endl;
+            if (op == "+=")
+            {
+                bigint1 += bigint2;
+                assert(bigint1 == expected_result && "Addition-assignment test failed!");
+            }
+            else if (op == "-=")
+            {
+                bigint1 -= bigint2;
+                assert(bigint1 == expected_result && "Subtraction-assignment test failed!");
+            }
+            else if (op == "*=")
+            {
+                bigint1 *= bigint2;
+                assert(bigint1 == expected_result && "Multiplication-assignment test failed!");
+            }
+        }
+    }
+
+    input.close();
+    std::cout << "Unit tests passed: " << total_tests << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+    return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    try
+    {
+        unit_test_2();
     }
     catch (const std::invalid_argument &e)
     {
