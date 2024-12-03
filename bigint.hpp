@@ -30,8 +30,7 @@ private:
 
     bool get_is_negative() const;
     bigint &set_negative(bool neg);
-
-    inline static std::invalid_argument zero_size = std::invalid_argument("Digits must be integers!");
+    bool is_zero() const;
     // A default constructor, creating the integer 0.
     // A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
     // A constructor that takes a string of digits and converts it to an arbitrary-precision integer.
@@ -339,7 +338,7 @@ bigint bigint::operator*(bigint const &other) const
 {
     bigint prod;
 
-    if (abs() == prod || other.abs() == prod)
+    if (is_zero() || other.is_zero())
         return prod;
     bigint short_num;
     bigint long_num;
@@ -413,7 +412,21 @@ bigint bigint::abs() const
 
 bool bigint::operator==(bigint const &other) const
 {
+
     if (get_is_negative() == other.get_is_negative() && get_digits() == other.get_digits())
+        return true;
+    else
+    {
+        if (is_zero() && other.is_zero())
+            return true;
+        else
+            return false;
+    }
+}
+
+bool bigint::is_zero() const
+{
+    if (size() == 1 && get_digit(0) == static_cast<uint8_t>(0))
         return true;
     else
         return false;
