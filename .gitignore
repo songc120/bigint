@@ -401,6 +401,9 @@ FodyWeavers.xsd
 
 demo
 */
+!data/
 *.dSYM/
 
 .DS_Store
+
+*.py

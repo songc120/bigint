@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cassert>
 
 int8_t add_one(const int8_t n)
 {
@@ -22,6 +23,14 @@ int main()
     std::vector<int> v1 = {1, 1, 1, 1, 1, 2, 3, 4, 5, 6};
     std::vector<int> v2 = {9, 2, 3, 4, 5, 6};
     std::vector<int> v3;
+    try
+    {
+        assert(1 + 2 == 2 && "Addition test failed!");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Test failed: " << e.what() << '\n';
+    }
 
     int carry = 0;
 
