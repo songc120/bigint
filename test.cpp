@@ -24,12 +24,13 @@ int8_t unit_test_2()
         std::istringstream string_stream(line);
         std::string left, op, right, eq, result;
         string_stream >> left >> op >> right >> eq >> result;
-        std::cout << "Testing operation" << op << ": " << left << op << right << "=" << result << '\n';
+        std::cout << "Testing operation " << op << ": " << left << op << right << "=" << result << '\n';
+        bigint bigint1(left);
+        bigint bigint2(right);
 
-        if (op == "+" || op == "-" || op == "*")
+        if (op == "+" || op == "-" || op == "*" || op == "+=" || op == "-=" || op == "*=")
         {
-            bigint bigint1(left);
-            bigint bigint2(right);
+
             bigint expected_result(result);
 
             if (op == "+")
@@ -44,12 +45,6 @@ int8_t unit_test_2()
             {
                 assert(bigint1 * bigint2 == expected_result && "Multiplication test failed!");
             }
-        }
-        else if (op == "+=" || op == "-=" || op == "*=")
-        {
-            bigint bigint1(left);
-            bigint bigint2(right);
-            bigint expected_result(result);
 
             if (op == "+=")
             {
@@ -67,10 +62,38 @@ int8_t unit_test_2()
                 assert(bigint1 == expected_result && "Multiplication-assignment test failed!");
             }
         }
+        else
+        {
+            bool expected_result = (result == "True");
+            if (op == "==")
+            {
+                assert(bigint1 == bigint2 == expected_result && "Equality test failed!");
+            }
+            else if (op == "!=")
+            {
+                assert(bigint1 != bigint2 == expected_result && "Inequality test failed!");
+            }
+            else if (op == ">")
+            {
+                assert(bigint1 > bigint2 == expected_result && "Comparison > test failed!");
+            }
+            else if (op == ">=")
+            {
+                assert(bigint1 >= bigint2 == expected_result && "Comparison >= test failed!");
+            }
+            else if (op == "<")
+            {
+                assert(bigint1 < bigint2 == expected_result && "Comparison < test failed!");
+            }
+            else if (op == "<=")
+            {
+                assert(bigint1 <= bigint2 == expected_result && "Comparison <= test failed!");
+            }
+        }
     }
 
     input.close();
-    std::cout << "Unit tests passed: " << total_tests << '\n';
+    std::cout << "Unit tests with 2 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
     return 0;
 }
@@ -141,7 +164,7 @@ int8_t unit_test_1()
     }
 
     input.close();
-    std::cout << "Unit tests passed: " << total_tests << '\n';
+    std::cout << "Unit tests with 1 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
     return 0;
 }
@@ -150,7 +173,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-        // unit_test_2();
+        unit_test_2();
         unit_test_1();
     }
     catch (const std::invalid_argument &e)
