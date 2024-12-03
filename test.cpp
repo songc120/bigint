@@ -22,8 +22,8 @@ int8_t unit_test_2()
 
         ++total_tests;
         std::istringstream string_stream(line);
-        std::string left, op, right, arrow, result;
-        string_stream >> left >> op >> right >> arrow >> result;
+        std::string left, op, right, eq, result;
+        string_stream >> left >> op >> right >> eq >> result;
         std::cout << "Tesing operation" << op << ": " << left << op << right << "=" << result << '\n';
 
         if (op == "+" || op == "-" || op == "*")
@@ -75,11 +75,78 @@ int8_t unit_test_2()
     return 0;
 }
 
+int8_t unit_test_1()
+{
+    std::string filename = "./data/unit_test_1data.txt";
+    std::ifstream input(filename);
+
+    if (!input.is_open())
+    {
+        std::cout << "Error opening input file!";
+        return -1;
+    }
+
+    std::string line;
+    u_int64_t total_tests = 0;
+
+    while (std::getline(input, line))
+    {
+
+        ++total_tests;
+        std::istringstream string_stream(line);
+        std::string left, right, eq, result;
+        string_stream >> left >> right >> eq >> result;
+
+        bigint expected_result(result);
+
+        if (right == "++")
+        {
+            std::string op = right;
+            bigint old_value = bigint(left);
+            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            old_value++;
+            assert(old_value == expected_result && "Post-increment test failed!");
+        }
+        else if (right == "--")
+        {
+            std::string op = right;
+            bigint old_value = bigint(left);
+            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            old_value--;
+            assert(old_value == expected_result && "Post-decrement test failed!");
+        }
+        else if (left == "++")
+        {
+            std::string op = left;
+            bigint old_value = bigint(right);
+            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            ++old_value;
+            assert(old_value == expected_result && "Pre-increment test failed!");
+        }
+        else if (left == "--")
+        {
+            std::string op = left;
+            bigint old_value = bigint(right);
+            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            --old_value;
+            assert(old_value == expected_result && "Pre-decrement test failed!");
+        }
+
+        // }
+    }
+
+    input.close();
+    std::cout << "Unit tests passed: " << total_tests << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     try
     {
-        unit_test_2();
+        // unit_test_2();
+        unit_test_1();
     }
     catch (const std::invalid_argument &e)
     {
