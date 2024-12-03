@@ -42,16 +42,14 @@ int main()
     std::cout << v1[0] << '\n';
     std::cout << v1[6] << '\n';
     std::cout << v1[7] << '\n';
-    std::cout << v1[70] << '\n';
 
     std::cout << 1111123456 + 923456 << '\n';
 
     uint8_t n1 = 7;
     uint8_t n2 = 9;
     std::cout << "n1 = " << static_cast<uint16_t>(n1) << '\n';
-    std::cout << "n1 = " << static_cast<uint16_t>(n1+n2) << '\n';
+    std::cout << "n1 = " << static_cast<uint16_t>(n1 + n2) << '\n';
 
-    int8_t d = n2-n1;
+    int8_t d = n2 - n1;
     std::cout << "n1 = " << static_cast<uint16_t>(d) << '\n';
-
 }
