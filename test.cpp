@@ -6,6 +6,19 @@
 
 int8_t unit_test_constructor()
 {
+    // Unit stest for default constructor
+    bigint default_zero = bigint();
+    bigint int_zero = bigint(0);
+    bigint str_zero = bigint("0");
+    std::cout << "Comparing default constructor with int_zero: " << default_zero << " = " << int_zero << '\n';
+    assert(default_zero == int_zero && "Default constructor test failed!");
+    std::cout << "Comparing default constructor with str_zero: " << default_zero << " = " << str_zero << '\n';
+    assert(default_zero == str_zero && "Default constructor test failed!");
+
+    std::cout << "Unit tests for default constructor passed. " << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+
+    // Unit stest asserting bigint(int64_t) == bigint(string)
     uint64_t total_tests = 10;
     uint64_t passed_tests = 0;
     std::random_device rd;
@@ -20,11 +33,12 @@ int8_t unit_test_constructor()
         std::string randomStr = std::to_string(randomInt);
         bigint fromInt(randomInt);
         bigint fromString(randomStr);
+        std::cout << "Testing constructor using " << randomInt << '\n';
         assert(fromString == fromInt && "Constructor from string/int test failed!");
         passed_tests++;
     }
 
-    std::cout << "Unit tests for constructors passed: " << passed_tests << '\n';
+    std::cout << "Unit tests for constructors from string/int passed: " << passed_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
 
     return 0;

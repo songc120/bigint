@@ -94,12 +94,19 @@ bigint::bigint(int64_t n)
     {
         is_negative = false;
     }
-    while (n)
+    if (n)
     {
-        push_back(static_cast<uint8_t>(n % 10));
-        n /= 10;
+        while (n)
+        {
+            push_back(static_cast<uint8_t>(n % 10));
+            n /= 10;
+        }
+        std::reverse(begin(), end());
     }
-    std::reverse(begin(), end());
+    else
+    {
+        push_back(uint8_t(0));
+    }
 }
 bigint::bigint(std::string n)
 {
