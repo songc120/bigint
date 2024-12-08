@@ -4,9 +4,22 @@
 #include <cassert>
 #include <random>
 
-int8_t unit_test_constructor()
+std::vector<uint8_t> stringToDigits(const std::string &n)
 {
-    // Unit stest for default constructor
+    std::vector<uint8_t> result;
+    for (char ch : n)
+    {
+        if (std::isdigit(ch))
+        {
+            result.push_back(static_cast<uint8_t>(ch - '0'));
+        }
+    }
+    return result;
+}
+uint64_t unit_test_constructor()
+{
+    // Unit tests for default constructor
+    uint64_t default_tests = 2;
     bigint default_zero = bigint();
     bigint int_zero = bigint(0);
     bigint str_zero = bigint("0");
@@ -15,33 +28,64 @@ int8_t unit_test_constructor()
     std::cout << "Comparing default constructor with str_zero: " << default_zero << " = " << str_zero << '\n';
     assert(default_zero == str_zero && "Default constructor test failed!");
 
-    std::cout << "Unit tests for default constructor passed. " << '\n';
+    std::cout << "Unit tests for default constructor passed: 2 " << '\n';
     std::cout << "------------------------------------------------" << std::endl;
 
-    // Unit stest asserting bigint(int64_t) == bigint(string)
-    uint64_t total_tests = 10;
-    uint64_t passed_tests = 0;
+    // Unit test asserting bigint(int64_t) == bigint(string)
+    uint64_t total_tests_64 = 10;
+    uint64_t passed_tests_64 = 0;
     std::random_device rd;
     std::mt19937_64 mt64(rd());
-    std::uniform_int_distribution<int64_t> dist(
-        std::numeric_limits<int64_t>::min(),
-        std::numeric_limits<int64_t>::max());
+    std::uniform_int_distribution<int64_t> dist(0, std::numeric_limits<int64_t>::max());
+    std::uniform_int_distribution<int> signDist(0, 1);
 
-    for (uint64_t i = 0; i < total_tests; i++)
+    for (uint64_t i = 0; i < total_tests_64; i++)
     {
         int64_t randomInt = dist(mt64);
+        if (signDist(mt64))
+        {
+            randomInt = -randomInt;
+        }
         std::string randomStr = std::to_string(randomInt);
         bigint fromInt(randomInt);
         bigint fromString(randomStr);
         std::cout << "Testing constructor using " << randomInt << '\n';
         assert(fromString == fromInt && "Constructor from string/int test failed!");
-        passed_tests++;
+        passed_tests_64++;
     }
 
-    std::cout << "Unit tests for constructors from string/int passed: " << passed_tests << '\n';
+    std::cout << "Unit tests for constructors from string/int passed: " << passed_tests_64 << '\n';
     std::cout << "------------------------------------------------" << std::endl;
 
-    return 0;
+    // Unit test for bigint(vary large number)
+    uint64_t total_tests_big = 10;
+    uint64_t passed_tests_big = 0;
+
+    for (uint64_t i = 0; i < total_tests_big; i++)
+    {
+        std::string largeNumber;
+        bool big_sign = true;
+        for (uint64_t j = 0; j < 3; j++)
+        {
+            largeNumber += std::to_string(dist(mt64));
+        }
+        if (signDist(mt64))
+        {
+
+            big_sign = false;
+            largeNumber = "-" + largeNumber;
+        }
+        bigint very_big(largeNumber);
+        std::cout << "Testing constructor using " << largeNumber << '\n';
+        assert(!big_sign == very_big.get_is_negative() && "Constructor from very large number failed in sign!");
+        assert(very_big.get_digits() == stringToDigits(largeNumber) && "Constructor from very large number failed in digits!");
+        passed_tests_big++;
+    }
+
+    std::cout << "Unit tests for constructors from very large number: " << passed_tests_big << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+
+    return default_tests + passed_tests_64 + passed_tests_big;
 }
 
 int8_t unit_test_2()
