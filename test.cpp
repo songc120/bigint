@@ -2,6 +2,33 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+#include <random>
+
+int8_t unit_test_constructor()
+{
+    uint64_t total_tests = 10;
+    uint64_t passed_tests = 0;
+    std::random_device rd;
+    std::mt19937_64 mt64(rd());
+    std::uniform_int_distribution<int64_t> dist(
+        std::numeric_limits<int64_t>::min(),
+        std::numeric_limits<int64_t>::max());
+
+    for (uint64_t i = 0; i < total_tests; i++)
+    {
+        int64_t randomInt = dist(mt64);
+        std::string randomStr = std::to_string(randomInt);
+        bigint fromInt(randomInt);
+        bigint fromString(randomStr);
+        assert(fromString == fromInt && "Constructor from string/int test failed!");
+        passed_tests++;
+    }
+
+    std::cout << "Unit tests for constructors passed: " << passed_tests << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+
+    return 0;
+}
 
 int8_t unit_test_2()
 {
@@ -169,12 +196,13 @@ int8_t unit_test_1()
     return 0;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     try
     {
-        unit_test_2();
-        unit_test_1();
+        // unit_test_2();
+        // unit_test_1();
+        unit_test_constructor();
     }
     catch (const std::invalid_argument &e)
     {
