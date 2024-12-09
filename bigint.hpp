@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 class bigint
 {
 private:
@@ -27,8 +28,8 @@ private:
     std::vector<uint8_t>::iterator begin();
     std::vector<uint8_t>::iterator end();
 
-        bigint &set_negative(bool neg);
-    bool is_zero() const;
+    bigint &set_negative(bool neg);
+
     // A default constructor, creating the integer 0.
     // A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
     // A constructor that takes a string of digits and converts it to an arbitrary-precision integer.
@@ -50,6 +51,7 @@ public:
 
     bool get_is_negative() const;
     std::vector<uint8_t> get_digits() const;
+    bool is_zero() const; // TODO: all_of()
 
     bigint operator+(bigint const &other) const;
     bigint &operator+=(bigint const &increment);
@@ -129,6 +131,13 @@ bigint::bigint(std::string n)
     {
         throw std::invalid_argument("bigint::bigint : Input string is empty.");
     }
+
+    n.erase(0, n.find_first_not_of('0'));
+    if (n.empty())
+    {
+        n = "0";
+    }
+
     for (char ch : n)
     {
         if (!std::isdigit(ch))
@@ -376,11 +385,12 @@ bigint bigint::operator*(bigint const &other) const
         bigint digits_i;
         for (uint64_t j = 0; j < long_iter; j++)
         {
-            uint8_t prod_i = short_num.get_digit(short_iter - 1 - i) * long_num.get_digit(long_iter - 1 - j) + carry;
+            uint16_t prod_i = short_num.get_digit(short_iter - 1 - i) * long_num.get_digit(long_iter - 1 - j) + carry;
             carry = prod_i / 10;
+            uint8_t digits_i_j = static_cast<uint8_t>(prod_i % 10);
             digits_i.insert(digits_i.begin(), static_cast<uint8_t>(prod_i % 10));
-            // std::cout << "\n digit at i = "<< i << " j = "<<j<<" is: " << prod_i % 10 << "\n";
-            // std::cout << "\n carry at i = "<< i << " j = "<<j<<" is: " << static_cast<uint16_t>(carry) << "\n";
+            // std::cout << "\n digit at i = " << i << " j = " << j << " is: " << prod_i % 10 << "\n";
+            // std::cout << "\n carry at i = " << i << " j = " << j << " is: " << static_cast<uint16_t>(carry) << "\n";
         }
         for (uint8_t k = 0; k < i; k++)
             digits_i.push_back(0);
@@ -393,8 +403,8 @@ bigint bigint::operator*(bigint const &other) const
 
         digits_i.pop_back();
         prod += digits_i;
-        // std::cout << "\n digits_i at i = "<< i << " is:"<< digits_i<<"\n";
-        // std::cout << "\n prod at i = "<< i << " is:"<< prod<<"\n";
+        std::cout << "\n digits_i at i = " << i << " is:" << digits_i << "\n";
+        std::cout << "\n prod at i = " << i << " is:" << prod << "\n";
     }
 
     prod.set_negative(!(get_is_negative() == other.get_is_negative()));
@@ -439,10 +449,8 @@ bool bigint::operator==(bigint const &other) const
 
 bool bigint::is_zero() const
 {
-    if (size() == 1 && get_digit(0) == static_cast<uint8_t>(0))
-        return true;
-    else
-        return false;
+    return std::all_of(get_digits().begin(), get_digits().end(), [](uint8_t digit)
+                       { return digit == 0; });
 }
 
 bool bigint::operator!=(bigint const &other) const

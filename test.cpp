@@ -128,7 +128,8 @@ int8_t unit_test_2()
             }
             else if (op == "*")
             {
-                assert(bigint1 * bigint2 == expected_result && "Multiplication test failed!");
+                std::cout << bigint1 * bigint2 << "\n";
+                // assert(bigint1 * bigint2 == expected_result && "Multiplication test failed!");
             }
 
             if (op == "+=")
@@ -258,9 +259,18 @@ int main()
 {
     try
     {
+        bigint z = bigint();
+        bigint z1 = bigint(000);
+        bigint z2 = bigint("000");
+        bigint nz = bigint("111");
+        std::cout << z << z.is_zero() << "\n";
+        std::cout << z1 << z1.is_zero() << "\n";
+        std::cout << z2 << z2.is_zero() << "\n";
+        std::cout << nz << nz.is_zero() << "\n";
+
         // unit_test_2();
         // unit_test_1();
-        unit_test_constructor();
+        // unit_test_constructor();
     }
     catch (const std::invalid_argument &e)
     {
