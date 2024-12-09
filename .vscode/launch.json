@@ -5,7 +5,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${fileDirname}/${fileBasenameNoExtension}", // Will be ${fileDirname}/${fileBasenameNoExtension} for Linux/macOS
+            "program": "${fileDirname}/build/${fileBasenameNoExtension}", // Will be ${fileDirname}/${fileBasenameNoExtension} for Linux/macOS
             "args": [],
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "C/C++: clang.exe build active file"

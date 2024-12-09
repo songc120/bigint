@@ -407,3 +407,5 @@ demo
 .DS_Store
 
 *.py
+
+build/
