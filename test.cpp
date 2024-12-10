@@ -79,6 +79,7 @@ uint64_t unit_test_constructor()
         std::cout << "Testing constructor using " << largeNumber << '\n';
         assert(!big_sign == very_big.get_is_negative() && "Constructor from very large number failed in sign!");
         assert(very_big.get_digits() == stringToDigits(largeNumber) && "Constructor from very large number failed in digits!");
+        assert(very_big == bigint(very_big) && "Copy constructor from very large number failed in sign!");
         passed_tests_big++;
     }
 
