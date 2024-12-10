@@ -132,7 +132,7 @@ bigint::bigint(std::string n)
         throw std::invalid_argument("bigint::bigint : Input string is empty.");
     }
 
-    // n.erase(0, n.find_first_not_of('0'));
+    n.erase(0, n.find_first_not_of('0'));
     if (n.empty())
     {
         n = "0";
@@ -153,7 +153,7 @@ bigint::bigint(const bigint &other) : digits(other.get_digits()), is_negative(ot
 
 uint8_t bigint::get_digit(const uint64_t n) const
 {
-    return n >= size() ? static_cast<uint8_t>(0) : get_digits()[n];
+    return n >= size() ? 0 : get_digits()[n];
 }
 
 std::vector<uint8_t> bigint::get_digits() const
@@ -224,7 +224,7 @@ bigint bigint::operator+(bigint const &other) const
 
     if (get_is_negative() == other.get_is_negative())
     {
-        uint8_t carry = static_cast<uint8_t>(0);
+        uint8_t carry = 0;
         size_t this_len = size();
         size_t other_len = other.size();
         size_t len = std::max(this_len, other_len);
@@ -236,7 +236,7 @@ bigint bigint::operator+(bigint const &other) const
             sum.insert(sum.begin(), static_cast<uint8_t>(sum_i % 10));
         }
         if (carry > 0)
-            sum.insert(sum.begin(), static_cast<uint8_t>(carry));
+            sum.insert(sum.begin(), carry);
 
         sum.set_negative(get_is_negative());
         sum.pop_back();
@@ -295,7 +295,7 @@ bigint bigint::operator-(bigint const &other) const
         size_t neg_len = neg_num.size();
         size_t len = std::max(pos_len, neg_len);
 
-        uint8_t borrow = static_cast<uint8_t>(0);
+        uint8_t borrow = 0;
 
         for (uint64_t i = 0; i < len; i++)
         {
@@ -305,14 +305,14 @@ bigint bigint::operator-(bigint const &other) const
 
             if (pos_i < (neg_i + borrow))
             {
-                diff_i = neg_i - pos_i + borrow;
-                borrow = static_cast<uint8_t>(1);
-                diff_i = static_cast<uint8_t>(10) - diff_i;
+                diff_i = static_cast<uint8_t>(neg_i - pos_i + borrow);
+                borrow = 1;
+                diff_i = static_cast<uint8_t>(10 - diff_i);
             }
             else
             {
-                diff_i = pos_i - neg_i - borrow;
-                borrow = static_cast<uint8_t>(0);
+                diff_i = static_cast<uint8_t>(pos_i - neg_i - borrow);
+                borrow = 0;
             }
             diff.insert(diff.begin(), diff_i);
         }
@@ -363,7 +363,7 @@ bigint bigint::operator*(bigint const &other) const
     if (is_zero() || other.is_zero())
         return prod;
 
-    uint8_t carry = static_cast<uint8_t>(0);
+    uint8_t carry = 0;
     size_t inner_iter = size();
     size_t outer_iter = other.size();
 
@@ -385,8 +385,8 @@ bigint bigint::operator*(bigint const &other) const
 
         if (carry > 0)
         {
-            digits_i.insert(digits_i.begin(), static_cast<uint8_t>(carry));
-            carry = static_cast<uint8_t>(0);
+            digits_i.insert(digits_i.begin(), carry);
+            carry = 0;
         }
 
         digits_i.pop_back();

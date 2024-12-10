@@ -259,8 +259,8 @@ int main()
     try
     {
         unit_test_2();
-        // unit_test_1();
-        // unit_test_constructor();
+        unit_test_1();
+        unit_test_constructor();
     }
     catch (const std::invalid_argument &e)
     {
