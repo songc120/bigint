@@ -51,8 +51,7 @@ public:
 
     bool get_is_negative() const;
     std::vector<uint8_t> get_digits() const;
-    bool is_zero() const; // TODO: all_of()
-
+    bool is_zero() const;
     bigint operator+(bigint const &other) const;
     bigint &operator+=(bigint const &increment);
     bigint &operator++();
@@ -132,7 +131,7 @@ bigint::bigint(std::string n)
         throw std::invalid_argument("bigint::bigint : Input string is empty.");
     }
 
-    n.erase(0, n.find_first_not_of('0'));
+    // n.erase(0, n.find_first_not_of('0'));
     if (n.empty())
     {
         n = "0";
@@ -153,7 +152,7 @@ bigint::bigint(const bigint &other) : digits(other.get_digits()), is_negative(ot
 
 uint8_t bigint::get_digit(const uint64_t n) const
 {
-    return n < 0 ? static_cast<uint8_t>(0) : get_digits()[n];
+    return n >= size() ? static_cast<uint8_t>(0) : get_digits()[n];
 }
 
 std::vector<uint8_t> bigint::get_digits() const
@@ -224,15 +223,15 @@ bigint bigint::operator+(bigint const &other) const
 
     if (get_is_negative() == other.get_is_negative())
     {
-        uint8_t carry = 0;
+        uint8_t carry = static_cast<uint8_t>(0);
         size_t this_len = size();
         size_t other_len = other.size();
         size_t len = std::max(this_len, other_len);
 
         for (uint64_t i = 0; i < len; i++)
         {
-            uint8_t sum_i = get_digit(this_len - 1 - i) + other.get_digit(other_len - 1 - i) + carry;
-            carry = sum_i / 10;
+            uint8_t sum_i = static_cast<uint8_t>(get_digit(this_len - 1 - i) + other.get_digit(other_len - 1 - i) + carry);
+            carry = static_cast<uint8_t>(sum_i / 10);
             sum.insert(sum.begin(), static_cast<uint8_t>(sum_i % 10));
         }
         if (carry > 0)
@@ -295,7 +294,7 @@ bigint bigint::operator-(bigint const &other) const
         size_t neg_len = neg_num.size();
         size_t len = std::max(pos_len, neg_len);
 
-        uint8_t borrow = 0;
+        uint8_t borrow = static_cast<uint8_t>(0);
 
         for (uint64_t i = 0; i < len; i++)
         {
@@ -306,13 +305,13 @@ bigint bigint::operator-(bigint const &other) const
             if (pos_i < (neg_i + borrow))
             {
                 diff_i = neg_i - pos_i + borrow;
-                borrow = 1;
+                borrow = static_cast<uint8_t>(1);
                 diff_i = static_cast<uint8_t>(10) - diff_i;
             }
             else
             {
                 diff_i = pos_i - neg_i - borrow;
-                borrow = 0;
+                borrow = static_cast<uint8_t>(0);
             }
             diff.insert(diff.begin(), diff_i);
         }
@@ -358,53 +357,93 @@ bigint bigint::operator--(int)
 
 bigint bigint::operator*(bigint const &other) const
 {
+    // bigint t;
+    // for (uint8_t k = 0; k < 40; k++)
+    // {
+    //     t.push_back(uint8_t(0));
+    //     std::cout << "is it zero? " << t.is_zero() << "\n";
+    // }
+
+    // std::cout << t << "\n";
+    // std::cout << t.is_zero() << "\n";
+
+    // return bigint();
     bigint prod;
+    std::cout << "initial prod = " << prod << "\n";
 
     if (is_zero() || other.is_zero())
         return prod;
-    bigint short_num;
-    bigint long_num;
 
-    if (abs() > other.abs())
-    {
-        long_num = *this;
-        short_num = other;
-    }
-    else
-    {
-        long_num = other;
-        short_num = *this;
-    }
+    uint8_t carry = static_cast<uint8_t>(0);
+    size_t inner_iter = size();
+    size_t outer_iter = other.size();
 
-    uint8_t carry = 0;
-    size_t long_iter = long_num.size();
-    size_t short_iter = short_num.size();
-
-    for (uint64_t i = 0; i < short_iter; i++)
+    for (uint64_t i = 0; i < outer_iter; i++)
     {
         bigint digits_i;
-        for (uint64_t j = 0; j < long_iter; j++)
+        for (uint64_t j = 0; j < inner_iter; j++)
         {
-            uint16_t prod_i = short_num.get_digit(short_iter - 1 - i) * long_num.get_digit(long_iter - 1 - j) + carry;
-            carry = prod_i / 10;
+            uint8_t prod_i = static_cast<uint8_t>(other.get_digit(outer_iter - 1 - i) * get_digit(inner_iter - 1 - j) + carry);
+            carry = static_cast<uint8_t>(prod_i / 10);
             uint8_t digits_i_j = static_cast<uint8_t>(prod_i % 10);
-            digits_i.insert(digits_i.begin(), static_cast<uint8_t>(prod_i % 10));
+
+            digits_i.insert(digits_i.begin(), digits_i_j);
+            // if (!digits_i.is_zero())
+            // {
+            //     std::cout << digits_i << "digits_i is not zero! in mult i = " << i << "\n";
+            //     // for (uint8_t dn : digits_i.get_digits())
+            //     //     std::cout
+            //     //         << dn << ' ';
+            // }
+            // std::cout << '\n';
+            // std::cout << !digits_i.is_zero() << "\n";
             // std::cout << "\n digit at i = " << i << " j = " << j << " is: " << prod_i % 10 << "\n";
             // std::cout << "\n carry at i = " << i << " j = " << j << " is: " << static_cast<uint16_t>(carry) << "\n";
         }
-        for (uint8_t k = 0; k < i; k++)
-            digits_i.push_back(0);
+        for (uint64_t k = 0; k < i; k++)
+        {
+            digits_i.push_back(uint8_t(0));
+            // if (!digits_i.is_zero())
+            // {
+            //     std::cout << digits_i << "digits_i is not zero! in push 0's k = " << k << "\n";
+            //     // for (uint8_t dn : digits_i.get_digits())
+            //     //     std::cout
+            //     //         << dn << ' ';
+            // }
+        }
 
         if (carry > 0)
         {
             digits_i.insert(digits_i.begin(), static_cast<uint8_t>(carry));
-            carry = 0;
+            digits_i.push_back(uint8_t(0));
+            // if (!digits_i.is_zero())
+            // {
+            //     std::cout << digits_i << "digits_i is not zero! in last carry " << "\n";
+            //     // for (uint8_t dn : digits_i.get_digits())
+            //     //     std::cout
+            //     //         << dn << ' ';
+            // }
+            carry = static_cast<uint8_t>(0);
         }
 
         digits_i.pop_back();
+        // if (!digits_i.is_zero())
+        // {
+        //     std::cout << digits_i << "digits_i is not zero! in last pop " << "\n";
+        // }
+        bigint prodArch = prod;
         prod += digits_i;
-        std::cout << "\n digits_i at i = " << i << " is:" << digits_i << "\n";
-        std::cout << "\n prod at i = " << i << " is:" << prod << "\n";
+        if (!prod.is_zero())
+        {
+            std::cout << "------------------------" << "\n";
+            std::cout << prod << "prod is not zero! in += i = " << i << "\n";
+            std::cout << prodArch << "prod archive in += \n";
+            std::cout << digits_i << "digits_i in +=" << "\n";
+            std::cout << prodArch + digits_i << "prod archive + digits_i in += \n";
+            std::cout << "------------------------" << "\n";
+        }
+        // std::cout << "\n digits_i at i = " << i << " is:" << digits_i << "\n";
+        // std::cout << "\n prod at i = " << i << " is:" << prod << "\n";
     }
 
     prod.set_negative(!(get_is_negative() == other.get_is_negative()));
@@ -447,10 +486,20 @@ bool bigint::operator==(bigint const &other) const
     }
 }
 
+static bool is_zero_v(const uint8_t &n)
+{
+    return n == static_cast<uint8_t>(0);
+}
 bool bigint::is_zero() const
 {
-    return std::all_of(get_digits().begin(), get_digits().end(), [](uint8_t digit)
-                       { return digit == 0; });
+    for (const uint8_t &digit : get_digits())
+    {
+        if (digit != static_cast<uint8_t>(0))
+        {
+            return false; // Found a non-zero value
+        }
+    }
+    return true; // All values are zero
 }
 
 bool bigint::operator!=(bigint const &other) const
