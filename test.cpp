@@ -128,10 +128,7 @@ int8_t unit_test_2()
             }
             else if (op == "*")
             {
-                bigint p = bigint1 * bigint2;
-                std::cout
-                    << p << "\n";
-                assert(p == expected_result && "Multiplication test failed!");
+                assert(bigint1 * bigint2 == expected_result && "Multiplication test failed!");
             }
 
             if (op == "+=")
@@ -261,9 +258,6 @@ int main()
 {
     try
     {
-        bigint a;
-        bigint b;
-        a *b;
         unit_test_2();
         // unit_test_1();
         // unit_test_constructor();

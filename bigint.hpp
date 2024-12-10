@@ -52,6 +52,7 @@ public:
     bool get_is_negative() const;
     std::vector<uint8_t> get_digits() const;
     bool is_zero() const;
+
     bigint operator+(bigint const &other) const;
     bigint &operator+=(bigint const &increment);
     bigint &operator++();
@@ -357,19 +358,7 @@ bigint bigint::operator--(int)
 
 bigint bigint::operator*(bigint const &other) const
 {
-    // bigint t;
-    // for (uint8_t k = 0; k < 40; k++)
-    // {
-    //     t.push_back(uint8_t(0));
-    //     std::cout << "is it zero? " << t.is_zero() << "\n";
-    // }
-
-    // std::cout << t << "\n";
-    // std::cout << t.is_zero() << "\n";
-
-    // return bigint();
     bigint prod;
-    std::cout << "initial prod = " << prod << "\n";
 
     if (is_zero() || other.is_zero())
         return prod;
@@ -388,62 +377,21 @@ bigint bigint::operator*(bigint const &other) const
             uint8_t digits_i_j = static_cast<uint8_t>(prod_i % 10);
 
             digits_i.insert(digits_i.begin(), digits_i_j);
-            // if (!digits_i.is_zero())
-            // {
-            //     std::cout << digits_i << "digits_i is not zero! in mult i = " << i << "\n";
-            //     // for (uint8_t dn : digits_i.get_digits())
-            //     //     std::cout
-            //     //         << dn << ' ';
-            // }
-            // std::cout << '\n';
-            // std::cout << !digits_i.is_zero() << "\n";
-            // std::cout << "\n digit at i = " << i << " j = " << j << " is: " << prod_i % 10 << "\n";
-            // std::cout << "\n carry at i = " << i << " j = " << j << " is: " << static_cast<uint16_t>(carry) << "\n";
         }
         for (uint64_t k = 0; k < i; k++)
         {
             digits_i.push_back(uint8_t(0));
-            // if (!digits_i.is_zero())
-            // {
-            //     std::cout << digits_i << "digits_i is not zero! in push 0's k = " << k << "\n";
-            //     // for (uint8_t dn : digits_i.get_digits())
-            //     //     std::cout
-            //     //         << dn << ' ';
-            // }
         }
 
         if (carry > 0)
         {
             digits_i.insert(digits_i.begin(), static_cast<uint8_t>(carry));
-            digits_i.push_back(uint8_t(0));
-            // if (!digits_i.is_zero())
-            // {
-            //     std::cout << digits_i << "digits_i is not zero! in last carry " << "\n";
-            //     // for (uint8_t dn : digits_i.get_digits())
-            //     //     std::cout
-            //     //         << dn << ' ';
-            // }
             carry = static_cast<uint8_t>(0);
         }
 
         digits_i.pop_back();
-        // if (!digits_i.is_zero())
-        // {
-        //     std::cout << digits_i << "digits_i is not zero! in last pop " << "\n";
-        // }
         bigint prodArch = prod;
         prod += digits_i;
-        if (!prod.is_zero())
-        {
-            std::cout << "------------------------" << "\n";
-            std::cout << prod << "prod is not zero! in += i = " << i << "\n";
-            std::cout << prodArch << "prod archive in += \n";
-            std::cout << digits_i << "digits_i in +=" << "\n";
-            std::cout << prodArch + digits_i << "prod archive + digits_i in += \n";
-            std::cout << "------------------------" << "\n";
-        }
-        // std::cout << "\n digits_i at i = " << i << " is:" << digits_i << "\n";
-        // std::cout << "\n prod at i = " << i << " is:" << prod << "\n";
     }
 
     prod.set_negative(!(get_is_negative() == other.get_is_negative()));
@@ -486,20 +434,10 @@ bool bigint::operator==(bigint const &other) const
     }
 }
 
-static bool is_zero_v(const uint8_t &n)
-{
-    return n == static_cast<uint8_t>(0);
-}
 bool bigint::is_zero() const
 {
-    for (const uint8_t &digit : get_digits())
-    {
-        if (digit != static_cast<uint8_t>(0))
-        {
-            return false; // Found a non-zero value
-        }
-    }
-    return true; // All values are zero
+    return std::all_of(get_digits().begin(), get_digits().end(), [](uint8_t digit)
+                       { return digit == 0; });
 }
 
 bool bigint::operator!=(bigint const &other) const
