@@ -260,6 +260,12 @@ int main()
 {
     try
     {
+        bigint a = bigint("0");
+        bigint b = bigint("-0");
+        // std::cout << (-a==b) <<"\n";
+        // std::cout << (-b==a) <<"\n";
+        std::cout << (a==b) <<"\n";
+        std::cout << (b==a) <<"\n";
         // unit_test_2();
         unit_test_1();
         // unit_test_constructor();

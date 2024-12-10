@@ -429,15 +429,21 @@ bool bigint::operator==(bigint const &other) const
     {
         if (is_zero() && other.is_zero())
             return true;
-        else
+        else {
             return false;
+        }
+        
     }
 }
 
 bool bigint::is_zero() const
 {
-    return std::all_of(get_digits().begin(), get_digits().end(), [](uint8_t digit)
-                       { return digit == 0; });
+    for (const uint8_t& digit : get_digits()) {
+        if (digit != 0) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool bigint::operator!=(bigint const &other) const
