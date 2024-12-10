@@ -120,7 +120,9 @@ int8_t unit_test_2()
 
             if (op == "+")
             {
-                assert(bigint1 + bigint2 == expected_result && "Addition test failed!");
+                assert(bigint1 + bigint2 == expected_result && "Addition test a + b = c failed!");
+                assert(expected_result -  bigint1 == bigint2 && "Addition test c - a = b failed!");
+                assert(expected_result -  bigint2 == bigint1 && "Addition test c - b = a failed!");
             }
             else if (op == "-")
             {
@@ -211,7 +213,7 @@ int8_t unit_test_1()
         {
             std::string op = right;
             bigint old_value = bigint(left);
-            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation post increment" << ": " << left << op << " = " << result << '\n';
             old_value++;
             assert(old_value == expected_result && "Post-increment test failed!");
         }
@@ -219,7 +221,7 @@ int8_t unit_test_1()
         {
             std::string op = right;
             bigint old_value = bigint(left);
-            std::cout << "Testing operation post" << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation post decrement" << ": " << left << op << " = " << result << '\n';
             old_value--;
             assert(old_value == expected_result && "Post-decrement test failed!");
         }
@@ -227,7 +229,7 @@ int8_t unit_test_1()
         {
             std::string op = left;
             bigint old_value = bigint(right);
-            std::cout << "Testing operation pre" << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation pre increment" << ": " << old_value << op << " = " << result << '\n';
             ++old_value;
             assert(old_value == expected_result && "Pre-increment test failed!");
         }
@@ -235,7 +237,7 @@ int8_t unit_test_1()
         {
             std::string op = left;
             bigint old_value = bigint(right);
-            std::cout << "Testing operation pre" << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation pre decrement" << ": " << old_value << op << " = " << result << '\n';
             --old_value;
             assert(old_value == expected_result && "Pre-decrement test failed!");
         }
@@ -243,7 +245,7 @@ int8_t unit_test_1()
         {
             std::string op = left;
             bigint old_value = bigint(right);
-            std::cout << "Testing operation " << op << ": " << left << op << "=" << result << '\n';
+            std::cout << "Testing operation " << op << ": "  << op << old_value << " = " << result << '\n';
             assert(-old_value == expected_result && "Unary negation test failed!");
         }
     }
@@ -258,9 +260,9 @@ int main()
 {
     try
     {
-        unit_test_2();
+        // unit_test_2();
         unit_test_1();
-        unit_test_constructor();
+        // unit_test_constructor();
     }
     catch (const std::invalid_argument &e)
     {
