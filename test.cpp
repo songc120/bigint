@@ -284,6 +284,10 @@ int8_t unit_test_1()
             bigint old_value = bigint(right);
             std::cout << "Testing operation " << op << ": " << op << old_value << " = " << result << '\n';
             assert(-old_value == expected_result && "Unary negation test failed!");
+            assert(old_value == -expected_result && "Unary negation test failed!");
+
+            bigint zero("0");
+            assert(zero == -zero && "Unary negation test failed!");
         }
     }
 
@@ -297,8 +301,8 @@ int main()
 {
     try
     {
-        unit_test_2();
-        // unit_test_1();
+        // unit_test_2();
+        unit_test_1();
         // unit_test_constructor();
     }
     catch (const std::invalid_argument &e)
