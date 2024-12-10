@@ -1,3 +1,13 @@
+/**
+ * @file bigint.hpp
+ * @author Chenwei Song
+ * @brief A class to represent arbitrary-precision integers.
+ * @version 0.1
+ * @date 2024-12-10
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #include <vector>
 #include <string>
 #include <inttypes.h>
@@ -7,77 +17,275 @@
 class bigint
 {
 private:
-    // TODO: use reference?
-    // TODO:
-    /*
-    Writing proper constructors which enforce the invariant,
-        Making all data private and thus inaccessible to the user,
-        Ensuring that any member function which changes the data does so in a way which preserves the invariant.
-        */
-    std::vector<uint8_t> digits;
-    bool is_negative;
+    /**
+     * @brief
+     *
+     */
+    std::vector<uint8_t> digits; ///< Digits of the number stored in reverse order (least significant digit first).
+    bool is_negative;            ///< Sign of the number (true for negative, false for non-negative).
 
+    /**
+     * @brief Gets a digit at a specific index.
+     *
+     * @param n Index of the digit.
+     * @return The digit at the specified index or 0 if out of bounds.
+     */
     uint8_t get_digit(const uint64_t n) const;
 
+    /**
+     * @brief Set the digits object
+     *
+     * @param n Vector of digits.
+     * @return Reference to the updated bigint.
+     */
     bigint &set_digits(std::vector<uint8_t> n);
+    /**
+     * @brief Adds a digit to the end of the bigint.
+     *
+     * @param n Digit to add.
+     * @return Reference to the updated bigint.
+     */
     bigint &push_back(const uint8_t n);
+    /**
+     * @brief Removes the last digit of the bigint.
+     *
+     * @return Reference to the updated bigint.
+     */
     bigint &pop_back();
+    /**
+     * @brief Inserts a digit at the specified position.
+     *
+     * @param ind Iterator to the position.
+     * @param num Digit to insert.
+     * @return Reference to the updated bigint.
+     */
     bigint &insert(std::vector<uint8_t>::iterator ind, const uint8_t num);
+    /**
+     * @brief Erases a digit at the specified position.
+     *
+     * @param ind Iterator to the position.
+     * @return Reference to the updated bigint.
+     */
     bigint &erase(const std::vector<uint8_t>::iterator ind);
-    size_t size() const;
-    std::vector<uint8_t>::iterator begin();
-    std::vector<uint8_t>::iterator end();
 
+    /**
+     * @brief Set the is_negative object
+     *
+     * @param neg True if the bigint is negative.
+     * @return Reference to the updated bigint.
+     */
     bigint &set_negative(bool neg);
 
-    // A default constructor, creating the integer 0.
-    // A constructor that takes a signed 64-bit integer and converts it to an arbitrary-precision integer.
-    // A constructor that takes a string of digits and converts it to an arbitrary-precision integer.
-    // Addition (+ and +=)
-    // Subtraction (- and -=)
-    // Multiplication (* and *=)
-    // Negation (unary -)
-    // Comparison (==, !=, <, >, <=, and >=)
-    // Assignment (=)
-    // Insertion (<<, to print the integer to a stream such as std::cout or a file)
-public:
-    // constructors done
-    // TODO: change default; underscore
-    bigint();
-    bigint(int64_t n);
-    bigint(std::string n);
-    bigint(const bigint &other);
-    ~bigint() = default;
+    /**
+     * @brief Returns an iterator to the beginning of the digits.
+     *
+     * @return Iterator pointing to the first digit.
+     */
+    std::vector<uint8_t>::iterator begin();
+    /**
+     * @brief Returns an iterator to the end of the digits.
+     *
+     * @return Iterator pointing to one past the last digit.
+     */
+    std::vector<uint8_t>::iterator end();
 
-    bool get_is_negative() const;
-    std::vector<uint8_t> get_digits() const;
+    /**
+     * @brief Returns the number of digits in the bigint.
+     *
+     * @return The number of digits.
+     */
+    size_t size() const;
+    /**
+     * @brief Checks whether the bigint is zero.
+     *
+     * @return True if the bigint represents the value 0, false otherwise.
+     */
     bool is_zero() const;
 
+public:
+    /**
+     * @brief Default constructor. Initializes the bigint to 0.
+     *
+     */
+    bigint();
+    /**
+     * @brief Constructor from a signed 64-bit integer.
+     *
+     * @param n The integer to initialize with.
+     */
+    bigint(int64_t n);
+    /**
+     * @brief Constructor from a string of digits.
+     *
+     * @param n The string representation of the number.
+     * @throws std::invalid_argument if the string is contains non-number characters.
+     */
+    bigint(std::string n);
+    /**
+     * @brief Copy constructor.
+     *
+     * @param other The bigint to copy.
+     */
+    bigint(const bigint &other);
+    /**
+     * @brief Destroy the bigint object
+     *
+     */
+    ~bigint() = default;
+
+    /**
+     * @brief Get the is_negative object
+     *
+     * @return True if the bigint is negative, false otherwise.
+     */
+    bool get_is_negative() const;
+    /**
+     * @brief Get the digits object
+     *
+     * @return A vector containing the digits of the bigint.
+     */
+    std::vector<uint8_t> get_digits() const;
+
+    /**
+     * @brief Adds two bigints.
+     *
+     * @param other The other bigint to add.
+     * @return The sum of the two bigints.
+     */
     bigint operator+(bigint const &other) const;
+    /**
+     * @brief Adds another bigint to this bigint.
+     *
+     * @param increment The bigint to add.
+     * @return Reference to the updated bigint.
+     */
     bigint &operator+=(bigint const &increment);
+    /**
+     * @brief Pre-increment operator.
+     *
+     * @return Reference to the updated bigint.
+     */
     bigint &operator++();
+    /**
+     * @brief Post-increment operator.
+     *
+     * @return The value of the bigint before incrementing.
+     */
     bigint operator++(int);
 
+    /**
+     * @brief Subtracts one bigint from another.
+     *
+     * @param other The bigint to subtract.
+     * @return The difference of the two bigints.
+     */
     bigint operator-(bigint const &other) const;
+    /**
+     * @brief Subtracts another bigint from this bigint.
+     *
+     * @param decrement The bigint to subtract.
+     * @return Reference to the updated bigint.
+     */
     bigint &operator-=(bigint const &decrement);
+    /**
+     * @brief Pre-decrement operator.
+     *
+     * @return Reference to the updated bigint.
+     */
     bigint &operator--();
+    /**
+     * @brief Post-decrement operator.
+     *
+     * @return The value of the bigint before decrementing.
+     */
     bigint operator--(int);
 
+    /**
+     * @brief Multiplies two bigints.
+     *
+     * @param other other The bigint to multiply.
+     * @return The product of the two bigints.
+     */
     bigint operator*(bigint const &other) const;
+    /**
+     * @brief Multiplies another bigint with this bigint.
+     *
+     * @param multiplier The bigint to multiply.
+     * @return Reference to the updated bigint.
+     */
     bigint &operator*=(bigint const &multiplier);
 
+    /**
+     * @brief Flips the sign of the bigint.
+     *
+     * @return A new bigint that is the negation of the current bigint.
+     */
     bigint operator-() const;
+    /**
+     * @brief The absolute value of a bigint
+     *
+     * @return A new bigint that is the absolute value of the current bigint.
+     */
     bigint abs() const;
 
+    /**
+     * @brief Compares two bigints for equality.
+     *
+     * @param other The bigint to compare.
+     * @return True if the two bigints are equal, false otherwise.
+     */
     bool operator==(bigint const &other) const;
+    /**
+     * @brief Compares two bigints for inequality.
+     *
+     * @param other The bigint to compare.
+     * @return True if the two bigints are not equal, false otherwise.
+     */
     bool operator!=(bigint const &other) const;
+    /**
+     * @brief Compares if this bigint is less than another bigint.
+     *
+     * @param other The bigint to compare.
+     * @return True if this bigint is less than the other, false otherwise.
+     */
     bool operator<(bigint const &other) const;
+    /**
+     * @brief Compares if this bigint is greater than another bigint.
+     *
+     * @param other The bigint to compare.
+     * @return True if this bigint is greater than the other, false otherwise.
+     */
     bool operator>(bigint const &other) const;
+    /**
+     * @brief Compares if this bigint is less than or equal to another bigint.
+     *
+     * @param other The bigint to compare.
+     * @return True if this bigint is less than or equal to the other, false otherwise.
+     */
     bool operator<=(bigint const &other) const;
+    /**
+     * @brief Compares if this bigint is greater than or equal to another bigint.
+     *
+     * @param other The bigint to compare.
+     * @return True if this bigint is greater than or equal to the other, false otherwise.
+     */
     bool operator>=(bigint const &other) const;
 
+    /**
+     * @brief Assigns one bigint to another.
+     *
+     * @param other The bigint to assign from.
+     * @return Reference to the updated bigint.
+     */
     bigint &operator=(const bigint &other);
 
+    /**
+     * @brief Outputs the bigint to a stream.
+     *
+     * @param os The output stream.
+     * @param n The bigint to print.
+     * @return Reference to the output stream.
+     */
     friend std::ostream &operator<<(std::ostream &os, const bigint &n);
 };
 
@@ -429,17 +637,19 @@ bool bigint::operator==(bigint const &other) const
     {
         if (is_zero() && other.is_zero())
             return true;
-        else {
+        else
+        {
             return false;
         }
-        
     }
 }
 
 bool bigint::is_zero() const
 {
-    for (const uint8_t& digit : get_digits()) {
-        if (digit != 0) {
+    for (const uint8_t &digit : get_digits())
+    {
+        if (digit != 0)
+        {
             return false;
         }
     }
