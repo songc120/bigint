@@ -121,16 +121,47 @@ int8_t unit_test_2()
             if (op == "+")
             {
                 assert(bigint1 + bigint2 == expected_result && "Addition test a + b = c failed!");
-                assert(expected_result -  bigint1 == bigint2 && "Addition test c - a = b failed!");
-                assert(expected_result -  bigint2 == bigint1 && "Addition test c - b = a failed!");
+                assert(bigint2 + bigint1 == expected_result && "Addition test b + a = c failed!");
+
+                assert(bigint2 + bigint1 == expected_result && "Addition test a + b + c = c + a + b failed!");
+
+                assert((bigint1 + (bigint2 + expected_result)) == ((bigint1 + bigint2) + expected_result) && "Associativity test a + (b + c) = (a + b) + c failed!");
+
+                bigint zero("0");
+                assert((bigint1 + zero) == bigint1 && "Addition identity test a + 0 = a failed!");
+                assert((zero + bigint1) == bigint1 && "Addition identity test 0 + a = a failed!");
+
+                assert((bigint1 + (-bigint1)) == zero && "Addition inverse test a + (-a) = 0 failed!");
+
+                assert(bigint1 - bigint2 + expected_result == expected_result + bigint1 - bigint2 && "Addition/Subtraction test a - b + c = c + a - b failed!");
+                assert(bigint1 - bigint2 + expected_result == expected_result - bigint2 + bigint1 && "Addition/Subtraction test a - b + c = c - b + a failed!");
+                assert(bigint1 - bigint2 + expected_result == -bigint2 + bigint1 + expected_result && "Addition/Subtraction test a - b + c = - b + a + c failed!");
             }
             else if (op == "-")
             {
-                assert(bigint1 - bigint2 == expected_result && "Subtraction test failed!");
+                bigint zero("0");
+                assert((bigint1 - bigint1) == zero && "Self-inverse test a - a = 0 failed!");
+
+                assert((bigint1 - bigint2 + bigint2) == bigint1 && "Inverse test a - b + b = a failed!");
+                assert((bigint1 + bigint2 - bigint2) == bigint1 && "Inverse test a + b - b = a failed!");
+
+                assert(bigint1 - bigint2 == expected_result && "Subtraction test a - b = c failed!");
+                assert(bigint1 == bigint2 + expected_result && "Subtraction test a = b + c failed!");
+                assert(bigint2 == bigint1 - expected_result && "Subtraction test b = a - c failed!");
             }
             else if (op == "*")
             {
-                assert(bigint1 * bigint2 == expected_result && "Multiplication test failed!");
+                assert(bigint1 * bigint2 == expected_result && "Multiplication test a * b = c failed!");
+                assert(bigint2 * bigint1 == expected_result && "Multiplication test b * a = c failed!");
+                assert((bigint1 * (bigint2 * expected_result)) == ((bigint1 * bigint2) * expected_result) && "Associativity test a * (b * c) = (a * b) * c failed!");
+
+                bigint one("1");
+                assert((bigint1 * one) == bigint1 && "Multiplication identity test a * 1 = a failed!");
+                assert((one * bigint1) == bigint1 && "Multiplication identity test 1 * a = a failed!");
+                bigint zero("0");
+
+                assert((bigint1 * zero) == zero && "Multiplication by zero test a * 0 = 0 failed!");
+                assert((zero * bigint1) == zero && "Multiplication by zero test 0 * a = 0 failed!");
             }
 
             if (op == "+=")
@@ -155,26 +186,32 @@ int8_t unit_test_2()
             if (op == "==")
             {
                 assert(bigint1 == bigint2 == expected_result && "Equality test failed!");
+                assert(bigint2 == bigint1 == expected_result && "Equality test failed!");
             }
             else if (op == "!=")
             {
                 assert(bigint1 != bigint2 == expected_result && "Inequality test failed!");
+                assert(bigint2 != bigint1 == expected_result && "Inequality test failed!");
             }
             else if (op == ">")
             {
                 assert(bigint1 > bigint2 == expected_result && "Comparison > test failed!");
+                assert(-bigint1 < -bigint2 == expected_result && "Comparison > test failed!");
             }
             else if (op == ">=")
             {
                 assert(bigint1 >= bigint2 == expected_result && "Comparison >= test failed!");
+                assert(-bigint1 <= -bigint2 == expected_result && "Comparison >= test failed!");
             }
             else if (op == "<")
             {
                 assert(bigint1 < bigint2 == expected_result && "Comparison < test failed!");
+                assert(-bigint1 > -bigint2 == expected_result && "Comparison < test failed!");
             }
             else if (op == "<=")
             {
                 assert(bigint1 <= bigint2 == expected_result && "Comparison <= test failed!");
+                assert(-bigint1 >= -bigint2 == expected_result && "Comparison <= test failed!");
             }
         }
     }
@@ -245,7 +282,7 @@ int8_t unit_test_1()
         {
             std::string op = left;
             bigint old_value = bigint(right);
-            std::cout << "Testing operation " << op << ": "  << op << old_value << " = " << result << '\n';
+            std::cout << "Testing operation " << op << ": " << op << old_value << " = " << result << '\n';
             assert(-old_value == expected_result && "Unary negation test failed!");
         }
     }
@@ -260,14 +297,8 @@ int main()
 {
     try
     {
-        bigint a = bigint("0");
-        bigint b = bigint("-0");
-        // std::cout << (-a==b) <<"\n";
-        // std::cout << (-b==a) <<"\n";
-        std::cout << (a==b) <<"\n";
-        std::cout << (b==a) <<"\n";
-        // unit_test_2();
-        unit_test_1();
+        unit_test_2();
+        // unit_test_1();
         // unit_test_constructor();
     }
     catch (const std::invalid_argument &e)
