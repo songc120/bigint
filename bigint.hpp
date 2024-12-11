@@ -411,7 +411,16 @@ bigint &bigint::erase(const std::vector<uint8_t>::iterator ind)
 
 size_t bigint::size() const
 {
-    return digits.size();
+    if (is_zero())
+        return 0;
+    size_t length = get_digits().size();
+    std::size_t startIndex = 0;
+
+    while (startIndex < length && get_digits()[startIndex] == 0)
+    {
+        ++startIndex;
+    }
+    return length - startIndex;
 }
 
 bool bigint::get_is_negative() const
@@ -526,7 +535,7 @@ bigint bigint::operator-(bigint const &other) const
         }
 
         diff.pop_back();
-        uint64_t max_zero_iter = diff.size() - 1;
+        uint64_t max_zero_iter = diff.get_digits().size() - 1;
         for (uint64_t j = 0; j < max_zero_iter; j++)
         {
             if (diff.get_digit(0) == 0)
@@ -670,6 +679,10 @@ bool bigint::operator<(bigint const &other) const
         return false;
     else if (get_is_negative() != other.get_is_negative())
         return get_is_negative();
+    else if (size() > other.size())
+    {
+        return get_is_negative();
+    }
     else if (size() == other.size())
     {
         for (uint64_t i = 0; i < size(); i++)
@@ -678,10 +691,6 @@ bool bigint::operator<(bigint const &other) const
                 return get_digit(i) > other.get_digit(i) ? get_is_negative() : !get_is_negative();
         }
         return false;
-    }
-    else if (size() > other.size())
-    {
-        return get_is_negative();
     }
     else
         return !get_is_negative();
