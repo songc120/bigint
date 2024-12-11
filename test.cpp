@@ -1,9 +1,25 @@
+/**
+ * @file test.cpp
+ * @author Chenwei Song
+ * @brief Unit tests for the `bigint` class, covering constructors, arithmetic operations, comparisons, and edge cases.
+ * @version 0.1
+ * @date 2024-12-10
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include "bigint.hpp"
 #include <fstream>
 #include <sstream>
 #include <cassert>
 #include <random>
 
+/**
+ * @brief Converts a string of digits to a vector of `uint8_t`.
+ * 
+ * @param n The string to convert.
+ * @return A vector of digits (`uint8_t`), ignoring non-digit characters.
+ */
 std::vector<uint8_t> stringToDigits(const std::string &n)
 {
     std::vector<uint8_t> result;
@@ -16,6 +32,10 @@ std::vector<uint8_t> stringToDigits(const std::string &n)
     }
     return result;
 }
+/**
+ * @brief Unit tests for the constructors of the `bigint` class.
+ * 
+ */
 void unit_test_constructor()
 {
     std::ofstream logFile("./unit_test_constructor.log");
@@ -92,7 +112,11 @@ void unit_test_constructor()
     std::cout << "------------------------------------------------" << std::endl;
     logFile.close();
 }
-
+/**
+ * @brief Unit tests for arithmetic operations and comparisons.
+ * 
+ * @return Exit code (0 for success, non-zero for failure).
+ */
 int8_t unit_test_2()
 {
     std::ofstream logFile("./unit_test_2.log");
@@ -232,7 +256,11 @@ int8_t unit_test_2()
     logFile.close();
     return EXIT_SUCCESS;
 }
-
+/**
+ * @brief Unit tests for unary operations, such as negation and increment/decrement.
+ * 
+ * @return Exit code (0 for success, non-zero for failure). 
+ */
 int8_t unit_test_1()
 {
     std::ofstream logFile("./unit_test_1.log");
@@ -314,7 +342,10 @@ int8_t unit_test_1()
     logFile.close();
     return EXIT_SUCCESS;
 }
-
+/**
+ * @brief Unit tests for edge cases in `bigint` operations.
+ * 
+ */
 void edge_test(){
     std::ofstream logFile("./unit_test_edge.log");
     std::cout.rdbuf(logFile.rdbuf());
@@ -358,7 +389,11 @@ void edge_test(){
 
     logFile.close();
 }
-
+/**
+ * @brief Main entry point for running all unit tests.
+ * 
+ * @return Exit code (0 for success, non-zero for failure).
+ */
 int main()
 {
     try
