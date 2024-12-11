@@ -404,7 +404,7 @@ demo
 !data/
 *.dSYM/
 
-.DS_Store
+.DS_Store/
 
 *.py
 
