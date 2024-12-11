@@ -667,10 +667,7 @@ bool bigint::is_zero() const
 
 bool bigint::operator!=(bigint const &other) const
 {
-    if (get_is_negative() != other.get_is_negative() || get_digits() != other.get_digits())
-        return true;
-    else
-        return false;
+    return !(*this == other);
 }
 
 bool bigint::operator<(bigint const &other) const
