@@ -41,7 +41,7 @@ void unit_test_constructor()
     std::ofstream logFile("./unit_test_constructor.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
-        std::cerr << "Error: Unable to open log file!" << std::endl;
+        std::cerr << "Error: Unable to open log file!" << '\n';
         EXIT_FAILURE;
     }
     // Unit tests for default constructor
@@ -122,7 +122,7 @@ int8_t unit_test_2()
     std::ofstream logFile("./unit_test_2.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
-        std::cerr << "Error: Unable to open log file!" << std::endl;
+        std::cerr << "Error: Unable to open log file!" << '\n';
         EXIT_FAILURE;
     }
     std::string filename = "./data/unit_test_2data.txt";
@@ -130,7 +130,7 @@ int8_t unit_test_2()
 
     if (!input.is_open())
     {
-        std::cerr << "Error: Failed to open input file 'filename.txt'. Please check if the file exists and you have the necessary permissions." << std::endl;
+        std::cerr << "Error: Failed to open input file 'filename.txt'. Please check if the file exists and you have the necessary permissions." << '\n';
         return EXIT_FAILURE;
     }
 
@@ -252,7 +252,7 @@ int8_t unit_test_2()
 
     input.close();
     std::cout << "Unit tests with 2 args passed: " << total_tests << '\n';
-    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "------------------------------------------------" << '\n';
     logFile.close();
     return EXIT_SUCCESS;
 }
@@ -266,7 +266,7 @@ int8_t unit_test_1()
     std::ofstream logFile("./unit_test_1.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
-        std::cerr << "Error: Unable to open log file!" << std::endl;
+        std::cerr << "Error: Unable to open log file!" << '\n';
         EXIT_FAILURE;
     }
     
@@ -276,7 +276,7 @@ int8_t unit_test_1()
 
     if (!input.is_open())
     {
-        std::cerr << "Error: Failed to open input file 'filename.txt'. Please check if the file exists and you have the necessary permissions." << std::endl;
+        std::cerr << "Error: Failed to open input file 'filename.txt'. Please check if the file exists and you have the necessary permissions." << '\n';
         return EXIT_FAILURE;
     }
 
@@ -389,6 +389,64 @@ void edge_test(){
 
     logFile.close();
 }
+
+/**
+ * @brief Unit tests for exception handling in the `bigint` class.
+ * 
+ */
+void exception_test() {
+    std::ofstream logFile("./unit_test_exception.log");
+    std::cout.rdbuf(logFile.rdbuf());
+    if (!logFile.is_open()) {
+        std::cerr << "Error: Unable to open log file!";
+        EXIT_FAILURE;
+    }
+
+    u_int64_t total_tests = 4;
+
+    bool exceptionThrown = false;
+    try {
+        bigint badChar("abc123");
+    } catch (const std::invalid_argument& e) {
+        exceptionThrown = true;
+        std::cout << "Caught expected exception: " << e.what() << '\n';
+    }
+    assert(exceptionThrown && "Exception for invalid character not thrown!");
+
+    exceptionThrown = false;
+    try {
+        bigint badChar("");
+    } catch (const std::invalid_argument& e) {
+        exceptionThrown = true;
+        std::cout << "Caught expected exception: " << e.what() << '\n';
+    }
+    assert(exceptionThrown && "Exception for empty string not thrown!");
+
+    exceptionThrown = false;
+    try {
+        bigint badChar("+");
+    } catch (const std::invalid_argument& e) {
+        exceptionThrown = true;
+        std::cout << "Caught expected exception: " << e.what() << '\n';
+    }
+    assert(exceptionThrown && "Exception for empty string not thrown!");
+
+
+    exceptionThrown = false;
+    try {
+        bigint badChar("-");
+    } catch (const std::invalid_argument& e) {
+        exceptionThrown = true;
+        std::cout << "Caught expected exception: " << e.what() << '\n';
+    }
+    assert(exceptionThrown && "Exception for empty string not thrown!");
+
+    std::cout << "Edge tests passed: " << total_tests << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+
+    logFile.close();
+}
+
 /**
  * @brief Main entry point for running all unit tests.
  * 
@@ -400,10 +458,11 @@ int main()
     {
         std::streambuf* originalCoutBuffer = std::cout.rdbuf();
     
-        unit_test_2();
-        unit_test_1();
         unit_test_constructor();
+        unit_test_1();
+        unit_test_2();
         edge_test();
+        exception_test();
 
         std::cout.rdbuf(originalCoutBuffer);
     }

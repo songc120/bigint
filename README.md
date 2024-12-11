@@ -153,6 +153,7 @@ Checks if both the sign and digits are the same. Or if both sides are zeros. E.g
 
 1. Add `-` to stream if the bigint is negative.
 2. Then add following digit to digit.
+3. E.g. `std::cout << bigint(-1234) << "\n";` should output `-1234`;`std::cout << bigint("1234") << "\n";` should output `1234`;
 
 ### Increment and Decrement
 
@@ -161,6 +162,7 @@ Checks if both the sign and digits are the same. Or if both sides are zeros. E.g
 
 ## Tests
 
+Test results are saved in corresponding .log files.
 ### Constructor Tests
 
 1. Tests assert that the default constructor indeed creates a zero bigint object.
@@ -211,3 +213,8 @@ Stress tests are performed in this function as well, as the end of the input fil
 
 The edge test ensures special cases, especially those involving zeros are handled correctly as changing signs and length calculation can be error-prone.
 
+### Exception Tests
+The only exception possible in public functions would be invalid input to the string constructor as there is no division involved.
+
+- `bigint(string_containing_non-digit_character)` like `bigint("1a")` or `bigint("0.5")` should throw `std::invalid_argument("bigint::bigint : Invalid character in input string: " + bad_character)`.
+- `bigint("")` or `bigint("-")` or `bigint("+")` should throw `std::invalid_argument("bigint::bigint : Input string is empty.")`.
