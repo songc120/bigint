@@ -18,8 +18,13 @@ std::vector<uint8_t> stringToDigits(const std::string &n)
 }
 void unit_test_constructor()
 {
+    std::ofstream logFile("./log/unit_test_constructor.log");
+    std::cout.rdbuf(logFile.rdbuf());
+    if (!logFile.is_open()) {
+        std::cerr << "Error: Unable to open log file!" << std::endl;
+        EXIT_FAILURE;
+    }
     // Unit tests for default constructor
-    uint64_t default_tests = 2;
     bigint default_zero = bigint();
     bigint int_zero = bigint(0);
     bigint str_zero = bigint("0");
@@ -85,10 +90,17 @@ void unit_test_constructor()
 
     std::cout << "Unit tests for constructors from very large number: " << passed_tests_big << '\n';
     std::cout << "------------------------------------------------" << std::endl;
+    logFile.close();
 }
 
 int8_t unit_test_2()
 {
+    std::ofstream logFile("./log/unit_test_2.log");
+    std::cout.rdbuf(logFile.rdbuf());
+    if (!logFile.is_open()) {
+        std::cerr << "Error: Unable to open log file!" << std::endl;
+        EXIT_FAILURE;
+    }
     std::string filename = "./data/unit_test_2data.txt";
     std::ifstream input(filename);
 
@@ -217,11 +229,20 @@ int8_t unit_test_2()
     input.close();
     std::cout << "Unit tests with 2 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
+    logFile.close();
     return EXIT_SUCCESS;
 }
 
 int8_t unit_test_1()
 {
+    std::ofstream logFile("./log/unit_test_1.log");
+    std::cout.rdbuf(logFile.rdbuf());
+    if (!logFile.is_open()) {
+        std::cerr << "Error: Unable to open log file!" << std::endl;
+        EXIT_FAILURE;
+    }
+    
+
     std::string filename = "./data/unit_test_1data.txt";
     std::ifstream input(filename);
 
@@ -289,36 +310,67 @@ int8_t unit_test_1()
     input.close();
     std::cout << "Unit tests with 1 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
+    
+    logFile.close();
     return EXIT_SUCCESS;
 }
 
 void edge_test(){
+    std::ofstream logFile("./log/unit_test_edge.log");
+    std::cout.rdbuf(logFile.rdbuf());
+    if (!logFile.is_open()) {
+        std::cerr << "Error: Unable to open log file!" << std::endl;
+        EXIT_FAILURE;
+    }
+
+    u_int64_t total_tests = 11;
+
     bigint zero = bigint(0);
     bigint one = bigint(1);
     bigint n_one = bigint(-1);
 
+    std::cout << "Testing zero == zero" << '\n';
     assert(zero == zero && "Comparison == failed!");
+    std::cout << "Testing zero == -zero" << '\n';
     assert(zero == -zero && "Comparison == test failed!");
+    std::cout << "Testing !(zero != zero)" << '\n';
     assert(!(zero != zero) && "Comparison != test failed!");
+    std::cout << "Testing !(zero != -zero)" << '\n';
     assert(!(zero != -zero) && "Comparison != test failed!");
+    std::cout << "Testing !(zero > -zero)" << '\n';
     assert(!(zero > -zero) && "Comparison > test failed!");
+    std::cout << "Testing (zero >= -zero)" << '\n';
     assert((zero >= -zero) && "Comparison >= test failed!");
+    std::cout << "Testing !(-zero < zero)" << '\n';
     assert(!(-zero < zero) && "Comparison < test failed!");
+    std::cout << "Testing (zero <= zero)" << '\n';
     assert((zero <= zero) && "Comparison <= test failed!");
 
+    std::cout << "Testing (zero + one == one)" << '\n';
     assert((zero + one == one) && "Addition test failed!");
+    std::cout << "Testing (one + n_one == zero)" << '\n';
     assert((one + n_one == zero) && "Addition test failed!");
+    std::cout << "(zero - one == n_one)" << '\n';
     assert((zero - one == n_one) && "Subtraction test failed!");
+
+    std::cout << "Edge tests passed: " << total_tests << '\n';
+    std::cout << "------------------------------------------------" << std::endl;
+
+    logFile.close();
 }
 
 int main()
 {
     try
     {
+        std::streambuf* originalCoutBuffer = std::cout.rdbuf();
+    
         unit_test_2();
         unit_test_1();
         unit_test_constructor();
         edge_test();
+
+        std::cout.rdbuf(originalCoutBuffer);
     }
     catch (const std::invalid_argument &e)
     {
