@@ -18,7 +18,7 @@ std::vector<uint8_t> stringToDigits(const std::string &n)
 }
 void unit_test_constructor()
 {
-    std::ofstream logFile("./log/unit_test_constructor.log");
+    std::ofstream logFile("./unit_test_constructor.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
         std::cerr << "Error: Unable to open log file!" << std::endl;
@@ -95,7 +95,7 @@ void unit_test_constructor()
 
 int8_t unit_test_2()
 {
-    std::ofstream logFile("./log/unit_test_2.log");
+    std::ofstream logFile("./unit_test_2.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
         std::cerr << "Error: Unable to open log file!" << std::endl;
@@ -235,7 +235,7 @@ int8_t unit_test_2()
 
 int8_t unit_test_1()
 {
-    std::ofstream logFile("./log/unit_test_1.log");
+    std::ofstream logFile("./unit_test_1.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
         std::cerr << "Error: Unable to open log file!" << std::endl;
@@ -316,7 +316,7 @@ int8_t unit_test_1()
 }
 
 void edge_test(){
-    std::ofstream logFile("./log/unit_test_edge.log");
+    std::ofstream logFile("./unit_test_edge.log");
     std::cout.rdbuf(logFile.rdbuf());
     if (!logFile.is_open()) {
         std::cerr << "Error: Unable to open log file!" << std::endl;
