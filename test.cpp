@@ -16,7 +16,7 @@ std::vector<uint8_t> stringToDigits(const std::string &n)
     }
     return result;
 }
-uint64_t unit_test_constructor()
+void unit_test_constructor()
 {
     // Unit tests for default constructor
     uint64_t default_tests = 2;
@@ -85,8 +85,6 @@ uint64_t unit_test_constructor()
 
     std::cout << "Unit tests for constructors from very large number: " << passed_tests_big << '\n';
     std::cout << "------------------------------------------------" << std::endl;
-
-    return default_tests + passed_tests_64 + passed_tests_big;
 }
 
 int8_t unit_test_2()
@@ -96,8 +94,8 @@ int8_t unit_test_2()
 
     if (!input.is_open())
     {
-        std::cout << "Error opening input file!";
-        return -1;
+        std::cerr << "Error: Failed to open input file 'filename.txt'. Please check if the file exists and you have the necessary permissions." << std::endl;
+        return EXIT_FAILURE;
     }
 
     std::string line;
@@ -124,7 +122,10 @@ int8_t unit_test_2()
                 assert(bigint1 + bigint2 == expected_result && "Addition test a + b = c failed!");
                 assert(bigint2 + bigint1 == expected_result && "Addition test b + a = c failed!");
 
-                assert(bigint2 + bigint1 == expected_result && "Addition test a + b + c = c + a + b failed!");
+                assert(bigint1 + bigint2 + expected_result == expected_result + bigint1 + bigint2 && "Addition test a + b + c = c + a + b failed!");
+                assert(bigint1 - bigint2 + expected_result == expected_result + bigint1 - bigint2 && "Addition/Subtraction test a - b + c = c + a - b failed!");
+                assert(bigint1 - bigint2 + expected_result == expected_result - bigint2 + bigint1 && "Addition/Subtraction test a - b + c = c - b + a failed!");
+                assert(bigint1 - bigint2 + expected_result == -bigint2 + bigint1 + expected_result && "Addition/Subtraction test a - b + c = - b + a + c failed!");
 
                 assert((bigint1 + (bigint2 + expected_result)) == ((bigint1 + bigint2) + expected_result) && "Associativity test a + (b + c) = (a + b) + c failed!");
 
@@ -133,10 +134,6 @@ int8_t unit_test_2()
                 assert((zero + bigint1) == bigint1 && "Addition identity test 0 + a = a failed!");
 
                 assert((bigint1 + (-bigint1)) == zero && "Addition inverse test a + (-a) = 0 failed!");
-
-                assert(bigint1 - bigint2 + expected_result == expected_result + bigint1 - bigint2 && "Addition/Subtraction test a - b + c = c + a - b failed!");
-                assert(bigint1 - bigint2 + expected_result == expected_result - bigint2 + bigint1 && "Addition/Subtraction test a - b + c = c - b + a failed!");
-                assert(bigint1 - bigint2 + expected_result == -bigint2 + bigint1 + expected_result && "Addition/Subtraction test a - b + c = - b + a + c failed!");
             }
             else if (op == "-")
             {
@@ -220,7 +217,7 @@ int8_t unit_test_2()
     input.close();
     std::cout << "Unit tests with 2 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int8_t unit_test_1()
@@ -230,8 +227,8 @@ int8_t unit_test_1()
 
     if (!input.is_open())
     {
-        std::cout << "Error opening input file!";
-        return -1;
+        std::cerr << "Error: Failed to open input file 'filename.txt'. Please check if the file exists and you have the necessary permissions." << std::endl;
+        return EXIT_FAILURE;
     }
 
     std::string line;
@@ -286,16 +283,32 @@ int8_t unit_test_1()
             std::cout << "Testing operation " << op << ": " << op << old_value << " = " << result << '\n';
             assert(-old_value == expected_result && "Unary negation test failed!");
             assert(old_value == -expected_result && "Unary negation test failed!");
-
-            bigint zero("0");
-            assert(zero == -zero && "Unary negation test failed!");
         }
     }
 
     input.close();
     std::cout << "Unit tests with 1 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
+}
+
+void edge_test(){
+    bigint zero = bigint(0);
+    bigint one = bigint(1);
+    bigint n_one = bigint(-1);
+
+    assert(zero == zero && "Comparison == failed!");
+    assert(zero == -zero && "Comparison == test failed!");
+    assert(!(zero != zero) && "Comparison != test failed!");
+    assert(!(zero != -zero) && "Comparison != test failed!");
+    assert(!(zero > -zero) && "Comparison > test failed!");
+    assert((zero >= -zero) && "Comparison >= test failed!");
+    assert(!(-zero < zero) && "Comparison < test failed!");
+    assert((zero <= zero) && "Comparison <= test failed!");
+
+    assert((zero + one == one) && "Addition test failed!");
+    assert((one + n_one == zero) && "Addition test failed!");
+    assert((zero - one == n_one) && "Subtraction test failed!");
 }
 
 int main()
@@ -305,216 +318,11 @@ int main()
         unit_test_2();
         unit_test_1();
         unit_test_constructor();
+        edge_test();
     }
     catch (const std::invalid_argument &e)
     {
         std::cout << "Error: " << e.what() << '\n';
     }
-
-    /*
-    std::string str = "1234567890";
-    bigint str_big_int(str);
-    std::cout << "The bigint from string is " << str_big_int << ".\n";
-
-    bigint default_big_int;
-    std::cout << "The default bigint is " << default_big_int << ".\n";
-
-    int64_t int64(1234567890);
-    bigint int_big_int(int64);
-    std::cout << "The bigint from int is " << int_big_int << ".\n";
-
-    std::string str_neg = "-1234567890";
-    bigint str_big_int_neg(str_neg);
-    std::cout << "The bigint from string is " << str_big_int_neg << ".\n";
-
-    int64_t int64_neg(-1234567890);
-    bigint int_big_int_neg(int64_neg);
-    std::cout << "The bigint from int is " << int_big_int_neg << ".\n";
-
-    bigint neg = -int_big_int_neg;
-    std::cout
-        << "The -(-c) " << neg << ".\n";
-
-    bigint neg1 = -int_big_int;
-    std::cout
-        << "The -(1234567890) " << neg1 << ".\n";
-
-    bigint neg2 = -default_big_int;
-    std::cout
-        << "The -(default) " << neg2 << ".\n";
-
-    // if (neg2 == int_big_int)
-    // {
-    //     std::cout
-    //         << "neg2 ==  int_big_int " << neg2 << ";" << int_big_int << ".\n";
-    // }
-    // else
-    // {
-    //     std::cout
-    //         << "neg2 !=  int_big_int " << ".\n";
-    // }
-
-    // if (neg2 != int_big_int)
-    // {
-    //     std::cout
-    //         << "neg2 !=  int_big_int " << neg2 << ";" << int_big_int << ".\n";
-    // }
-    // else
-    // {
-    //     std::cout
-    //         << "neg2 ==  int_big_int " << ".\n";
-    // }
-
-    // neg2 = int_big_int;
-    // std::cout
-    //     << "assign neg2 to  int_big_int " << neg2 << ".\n";
-
-    // if (neg2 == int_big_int)
-    // {
-    //     std::cout
-    //         << "neg2 ==  int_big_int " << ".\n";
-    // }
-    // else
-    // {
-    //     std::cout
-    //         << "neg2 !=  int_big_int " << ".\n";
-    // }
-
-    // if (neg2 != int_big_int)
-    // {
-    //     std::cout
-    //         << "neg2 !=  int_big_int " << neg2 << ";" << int_big_int << ".\n";
-    // }
-    // else
-    // {
-    //     std::cout
-    //         << "neg2 ==  int_big_int " << ".\n";
-    // }
-
-    bigint smallpos = bigint(123);
-    bigint smallpos2 = bigint(923);
-    bigint bigpos = bigint(12345);
-    bigint bigbigpos = bigint(13345);
-    bigint nsmallpos = bigint(-923);
-    bigint nbigpos = bigint(-12345);
-    bigint nbigbigpos = bigint(-13345);
-
-    // if (smallpos <= bigpos)
-    //     printf("smallpos > bigpos\n");
-    // if (bigpos <= bigbigpos)
-    //     printf("bigpos > bigbigpos\n");
-    // if (nbigpos <= nsmallpos)
-    //     printf("nbigpos > nsmallpos\n");
-    // if (nbigbigpos <= nbigpos)
-    //     printf("nbigbigpos > nbigpos\n");
-
-    // if (nsmallpos <= bigpos)
-    //     printf("nsmallpos > bigpos\n");
-    // if (nsmallpos <= nsmallpos)
-    //     printf("F:nsmallpos > nsmallpos\n");
-    // if (nsmallpos <= nbigpos)
-    //     printf("F:nsmallpos > nbigpos\n");
-    // if (nsmallpos <= nbigpos)
-    //     printf("F:nsmallpos > nbigpos\n");
-
-    std::cout << "-----plus------.\n";
-    std::cout
-        << smallpos << " + " << bigpos << "="<< 123 + 12345 << " = " << smallpos + bigpos << ".\n";
-
-    std::cout << smallpos << ".\n";
-
-
-
-    std::cout << "-----plus------.\n";
-    std::cout
-        << nsmallpos << " + " << nbigpos << "="<< -923 -12345 << " = " << nsmallpos + nbigpos << ".\n";
-
-    std::cout << "----plus-------.\n";
-    std::cout
-        << default_big_int << " + " << default_big_int << "="<< 0 << "  = " << default_big_int + default_big_int << ".\n";
-    std::cout << "----plus-------.\n";
-    std::cout
-        << 12345 << " + " << -923 << "=" << 12345 - 923 << "  = " << bigpos + bigint(-923)<< ".\n";
-    std::cout << "----plus-------.\n";
-    std::cout
-        << 291 << " + " <<- 92 << "=" << 291 - 92 << "  = " << bigint(291) + bigint(-92)<< ".\n";
-
-    std::cout << "-----plus------.\n";
-    std::cout
-        << smallpos << " - " << bigpos << "=" << 123 - 12345 << "  = " << smallpos + (-bigpos) << ".\n";
-
-    std::cout << "-----plus------.\n";
-    std::cout
-        << -2000 << " + " << 1 << "=" << -2000 + 1 << "  = " << bigint(-2000) + bigint(1) << ".\n";
-
-    std::cout << "----minus-------.\n";
-    std::cout
-        << bigpos << " - " << smallpos2 << "=" << 12345 - 923 << "  = " << bigpos - smallpos2<< ".\n";
-
-    std::cout << bigpos << ".\n";
-
-    std::cout << "-----minus------.\n";
-    std::cout
-        << bigbigpos << " - " << bigpos << "=" << 13345 - 12345 << "  = " << bigbigpos - bigpos<< ".\n";
-
-    std::cout << "------minus-----.\n";
-    std::cout
-        << 291 << " - " << 92 << "=" << 291 - 92 << " = " << bigint(291) -bigint(92) << ".\n";
-
-    std::cout << "------minus-----.\n";
-    std::cout
-        << 7000 << " - " << 5023 << "=" << 7000 - 5023 << "  = " << bigint(7000) -bigint(5023) << ".\n";
-
-    std::cout << "------minus-----.\n";
-    std::cout
-        << 100000 << " - " << 99999 << "=" << 100000 - 99999 << " = " << bigint(100000) -bigint(99999) << ".\n";
-        std::cout << "------minus-----.\n";
-    std::cout
-        << 100000 << " - " << 100000 << "=" << 100000 - 100000 << " = " << bigint(100000) -bigint(100000) << ".\n";
-
-
-    std::cout << "------minus-----.\n";
-    std::cout
-        << nsmallpos << " - " << nbigpos << "=" << -923 - -12345 << "  = " << nsmallpos -nbigpos << ".\n";
-
-    std::cout << "------minus-----.\n";
-    std::cout
-        << 11 << " - " << -99 << "=" << 11 - -99 << "  = " << bigint(11) -bigint(-99) << ".\n";
-
-    std::cout << "------minus-----.\n";
-    std::cout
-        << -11 << " - " << 99 << "=" << -11 - 99 << "  = " << bigint(-11) -bigint(99) << ".\n";
-
-    std::cout << "------times-----.\n";
-    std::cout
-        << -111 << " * " << 99 << "=" << -111 * 99 << "  = " << bigint(-111) *bigint(99) << ".\n";
-
-    std::cout << "------times-----.\n";
-    std::cout
-        << -222 << " * " << 99 << "=" << -222 * 99 << "  = " << bigint(-222) *bigint(99) << ".\n";
-
-    std::cout << "------times-----.\n";
-    std::cout
-        << 1111 << " * " << 9999 << "=" << 1111 * 9999 << "  = " << bigint(1111) *bigint(9999) << ".\n";
-
-    std::cout << "------times-----.\n";
-    std::cout
-        << 1111 << " * " << 99 << "=" << 1111 * 99 << "  = " << bigint(1111) *bigint(99) << ".\n";
-    bigint m1=bigint(1111);
-    m1*= bigint(99);
-    std::cout
-        << m1<< ".\n";
-
-    std::cout << "------times-----.\n";
-    std::cout
-        << 99 << " * " << 23456 << "=" << 99 * 23456 << "  = " << bigint(99) *bigint(23456) << ".\n";
-
-    std::cout << "------times-----.\n";
-    std::cout
-        << 1111 << " * " << 0 << "=" << 1111 * 0 << "  = " << bigint(1111) *bigint() << ".\n";
-    m1*= bigint();
-    std::cout
-        << m1<< ".\n";
-        */
     return 0;
 }
