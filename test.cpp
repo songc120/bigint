@@ -4,9 +4,9 @@
  * @brief Unit tests for the `bigint` class, covering constructors, arithmetic operations, comparisons, and edge cases.
  * @version 0.1
  * @date 2024-12-10
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 #include "bigint.hpp"
 #include <fstream>
@@ -16,7 +16,7 @@
 
 /**
  * @brief Converts a string of digits to a vector of `uint8_t`.
- * 
+ *
  * @param n The string to convert.
  * @return A vector of digits (`uint8_t`), ignoring non-digit characters.
  */
@@ -34,13 +34,14 @@ std::vector<uint8_t> stringToDigits(const std::string &n)
 }
 /**
  * @brief Unit tests for the constructors of the `bigint` class.
- * 
+ *
  */
 void unit_test_constructor()
 {
     std::ofstream logFile("./unit_test_constructor.log");
     std::cout.rdbuf(logFile.rdbuf());
-    if (!logFile.is_open()) {
+    if (!logFile.is_open())
+    {
         std::cerr << "Error: Unable to open log file!" << '\n';
         EXIT_FAILURE;
     }
@@ -114,14 +115,15 @@ void unit_test_constructor()
 }
 /**
  * @brief Unit tests for arithmetic operations and comparisons.
- * 
+ *
  * @return Exit code (0 for success, non-zero for failure).
  */
 int8_t unit_test_2()
 {
     std::ofstream logFile("./unit_test_2.log");
     std::cout.rdbuf(logFile.rdbuf());
-    if (!logFile.is_open()) {
+    if (!logFile.is_open())
+    {
         std::cerr << "Error: Unable to open log file!" << '\n';
         EXIT_FAILURE;
     }
@@ -135,7 +137,7 @@ int8_t unit_test_2()
     }
 
     std::string line;
-    u_int64_t total_tests = 0;
+    uint64_t total_tests = 0;
 
     while (std::getline(input, line))
     {
@@ -258,18 +260,18 @@ int8_t unit_test_2()
 }
 /**
  * @brief Unit tests for unary operations, such as negation and increment/decrement.
- * 
- * @return Exit code (0 for success, non-zero for failure). 
+ *
+ * @return Exit code (0 for success, non-zero for failure).
  */
 int8_t unit_test_1()
 {
     std::ofstream logFile("./unit_test_1.log");
     std::cout.rdbuf(logFile.rdbuf());
-    if (!logFile.is_open()) {
+    if (!logFile.is_open())
+    {
         std::cerr << "Error: Unable to open log file!" << '\n';
         EXIT_FAILURE;
     }
-    
 
     std::string filename = "./data/unit_test_1data.txt";
     std::ifstream input(filename);
@@ -281,7 +283,7 @@ int8_t unit_test_1()
     }
 
     std::string line;
-    u_int64_t total_tests = 0;
+    uint64_t total_tests = 0;
 
     while (std::getline(input, line))
     {
@@ -338,23 +340,25 @@ int8_t unit_test_1()
     input.close();
     std::cout << "Unit tests with 1 args passed: " << total_tests << '\n';
     std::cout << "------------------------------------------------" << std::endl;
-    
+
     logFile.close();
     return EXIT_SUCCESS;
 }
 /**
  * @brief Unit tests for edge cases in `bigint` operations.
- * 
+ *
  */
-void edge_test(){
+void edge_test()
+{
     std::ofstream logFile("./unit_test_edge.log");
     std::cout.rdbuf(logFile.rdbuf());
-    if (!logFile.is_open()) {
+    if (!logFile.is_open())
+    {
         std::cerr << "Error: Unable to open log file!" << std::endl;
         EXIT_FAILURE;
     }
 
-    u_int64_t total_tests = 11;
+    uint64_t total_tests = 11;
 
     bigint zero = bigint(0);
     bigint one = bigint(1);
@@ -392,50 +396,63 @@ void edge_test(){
 
 /**
  * @brief Unit tests for exception handling in the `bigint` class.
- * 
+ *
  */
-void exception_test() {
+void exception_test()
+{
     std::ofstream logFile("./unit_test_exception.log");
     std::cout.rdbuf(logFile.rdbuf());
-    if (!logFile.is_open()) {
+    if (!logFile.is_open())
+    {
         std::cerr << "Error: Unable to open log file!";
         EXIT_FAILURE;
     }
 
-    u_int64_t total_tests = 4;
+    uint64_t total_tests = 4;
 
     bool exceptionThrown = false;
-    try {
+    try
+    {
         bigint badChar("abc123");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument &e)
+    {
         exceptionThrown = true;
         std::cout << "Caught expected exception: " << e.what() << '\n';
     }
     assert(exceptionThrown && "Exception for invalid character not thrown!");
 
     exceptionThrown = false;
-    try {
+    try
+    {
         bigint badChar("");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument &e)
+    {
         exceptionThrown = true;
         std::cout << "Caught expected exception: " << e.what() << '\n';
     }
     assert(exceptionThrown && "Exception for empty string not thrown!");
 
     exceptionThrown = false;
-    try {
+    try
+    {
         bigint badChar("+");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument &e)
+    {
         exceptionThrown = true;
         std::cout << "Caught expected exception: " << e.what() << '\n';
     }
     assert(exceptionThrown && "Exception for empty string not thrown!");
 
-
     exceptionThrown = false;
-    try {
+    try
+    {
         bigint badChar("-");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument &e)
+    {
         exceptionThrown = true;
         std::cout << "Caught expected exception: " << e.what() << '\n';
     }
@@ -449,15 +466,15 @@ void exception_test() {
 
 /**
  * @brief Main entry point for running all unit tests.
- * 
+ *
  * @return Exit code (0 for success, non-zero for failure).
  */
 int main()
 {
     try
     {
-        std::streambuf* originalCoutBuffer = std::cout.rdbuf();
-    
+        std::streambuf *originalCoutBuffer = std::cout.rdbuf();
+
         unit_test_constructor();
         unit_test_1();
         unit_test_2();
